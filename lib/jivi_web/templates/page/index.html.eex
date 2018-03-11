@@ -1,0 +1,8 @@
+<div class="row">
+  <div class="col">
+    <h1 id="index-page">Join a Game</h1>
+    <input type="text" id="gameName"/>
+    <a href="" onclick="this.href='/game/'+document.getElementById('gameName').value">Join</a>  
+  </div>
+</div>
+
