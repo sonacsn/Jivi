@@ -111,10 +111,10 @@ defmodule Jivi.Game do
 
   def initial_jivis do
     jivis = [
-      %{name: "Pikachu", fire: 100, water: 30, selected: false, played: 0},
+      %{name: "Pikachu", fire: 100, water: 30, selected: true, played: 0},
       %{name: "Jigglypuff", fire: 30, water: 100, selected: false, played: 0},
       %{name: "Squirtle", fire: 80, water: 50, selected: false, played: 0},
-      %{name: "Cherizard", fire: 500, water: 20, selected: false, played: 0},
+      %{name: "Cherizard", fire: 500, water: 20, selected: true, played: 0},
       %{name: "Snorlax", fire: 20, water: 500, selected: false, played: 0},
       %{name: "Charmander", fire: 200, water: 60, selected: false, played: 0},
     ]
@@ -128,8 +128,41 @@ defmodule Jivi.Game do
     { player1, player2 }
   end
 
+  ## Accept a list of jivis
+  ## Return a list of jivis which doesn't contain any slected jivi
+  def remove_jivi_from_list(jivis) do
+    Enum.filter(jivis, fn(jivi) ->
+	Map.fetch!(jivi, :selected) == false
+    end)
+  end
+  
+  ## Accepts a list of jivis
+  ## Returns the first jivi whose selected filed is set to true
+  def return_selected_jivi(jivis) do
+    Enum.find(jivis, fn(jivi) ->
+      if(Map.fetch!(jivi, :selected) == true) do
+         jivi
+      end
+    end)
+  end
+
+  ## Accepts the game state and trigger which is the challenge type
+  ## Returns a game state where selected Jivis are removed from player list and are placed in field
   def fight(game, _trigger) do
-    Map.put(game, :field, [%{name: "Pikachu", fire: 100, water: 30, selected: false, played: 0}, %{name: "Jigglypuff", fire: 30, water: 100, selected: false, played: 0}]) 
+    player1_jivi = return_selected_jivi(game.player1.jivis)
+    player2_jivi = return_selected_jivi(game.player2.jivis)
+    game_update_field = Map.put(game, :field, [player1_jivi, player2_jivi])
+ 
+    p1_old_state = game_update_field.player1
+    p1_new_state = Map.put(p1_old_state, :jivis, remove_jivi_from_list(p1_old_state.jivis))
+    game_update_p1jivis = Map.put(game_update_field, :player1, p1_new_state)
+
+    p2_old_state = game_update_p1jivis.player2
+    p2_new_state = Map.put(p2_old_state, :jivis, remove_jivi_from_list(p2_old_state.jivis))
+    game_update_p2jivis = Map.put(game_update_p1jivis, :player2, p2_new_state)
+
+    game_update_p2jivis
+
   end
 end
 
