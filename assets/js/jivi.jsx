@@ -17,7 +17,8 @@ class MemoryGame extends React.Component {
 		disable_clicks: false, 
 		score: 100, 
                 player1: null,
-                player2: null};
+                player2: null,
+		field: null};
 
     this.channel.join()
         .receive("ok", this.gotView.bind(this))
@@ -53,11 +54,16 @@ class MemoryGame extends React.Component {
      this.channel.push("matched?", {position: pos})
                                  .receive("ok", resp => {this.flipBack(resp, pos)});
     }
-}
+  }
 
   flip(pos) {
     this.channel.push("flip", { position: pos })
         .receive("ok", resp => {this.matchCards(resp, pos)});
+  }
+
+  fight(trigger) {
+     this.channel.push("fight", { trigger: trigger })
+         .receive("ok", this.gotView.bind(this));
   }
 
   render() {
@@ -92,40 +98,11 @@ class MemoryGame extends React.Component {
     	  <div className="col-sm">
 	    <div className="container" >
               <div className="row">
-                <div className="col-md"><Card root={this} pos={0}/></div>
-                <div className="col-md"><Card root={this} pos={1}/></div>
-                <div className="col-md"><Card root={this} pos={2}/></div>
-                <div className="col-md"><Card root={this} pos={3}/></div>
-              </div>
-	      <div className="row">
-                <div className="col-md"><Card root={this} pos={4}/></div>
-                <div className="col-md"><Card root={this} pos={5}/></div>
-                <div className="col-md"><Card root={this} pos={6}/></div>
-                <div className="col-md"><Card root={this} pos={7}/></div>
-              </div> 
-              <div className="row">
-                <div className="col-md"><Card root={this} pos={8}/></div>
-                <div className="col-md"><Card root={this} pos={9}/></div>
-                <div className="col-md"><Card root={this} pos={10}/></div>
-                <div className="col-md"><Card root={this} pos={11}/></div>
-              </div>
-              <div className="row">
-                <div className="col-md"><Card root={this} pos={12}/></div>
-                <div className="col-md"><Card root={this} pos={13}/></div>
-                <div className="col-md"><Card root={this} pos={14}/></div>
-                <div className="col-md"><Card root={this} pos={15}/></div>
-              </div>
-              <div className="row">
-          	<div className="col-md-6">
-            	  <b>Score: </b>
-            	  <Score root={this} />
-	  	</div>
-	    	<div className="col-md-6">  
-	    	  <Button onClick={() => this.reset()}>Reset</Button>
-          	</div>
+                <div className="col-md">Battle field here</div>
               </div>
             </div>
           </div>
+          <button type="button" onClick={() => this.fight(0)}>Fight</button>
         </div>
         <div className="row">
           { player1_jivis }

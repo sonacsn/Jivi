@@ -8,6 +8,7 @@ defmodule Jivi.Game do
       matches: 0,
       player1: p1,
       player2: p2,
+      field: []
     }
   end
 
@@ -18,7 +19,8 @@ defmodule Jivi.Game do
       disable_clicks: game.disable_clicks,
       score: score(game.matches, game.clicks),
       player1: game.player1,
-      player2: game.player2
+      player2: game.player2,
+      field: game.field
     }
   end
 
@@ -124,6 +126,10 @@ defmodule Jivi.Game do
     player1 = %{name: "P1", turn: true, jivis: p1_jivis }
     player2 = %{name: "P2", turn: false, jivis: p2_jivis}
     { player1, player2 }
+  end
+
+  def fight(game, _trigger) do
+    Map.put(game, :field, [%{name: "Pikachu", fire: 100, water: 30, selected: false, played: 0}, %{name: "Jigglypuff", fire: 30, water: 100, selected: false, played: 0}]) 
   end
 end
 
