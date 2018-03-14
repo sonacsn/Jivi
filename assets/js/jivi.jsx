@@ -69,6 +69,7 @@ class MemoryGame extends React.Component {
   render() {
     let player1_jivis = "";
     let player2_jivis = "";  
+    let field_jivis = "";
     if(this.state.player1 != null) {
       player1_jivis = _.map(this.state.player1.jivis, (jivi) => {
         return <Jivi jivi={jivi} root={this} />;
@@ -76,6 +77,12 @@ class MemoryGame extends React.Component {
     }
     if(this.state.player2 != null) {
       player2_jivis = _.map(this.state.player2.jivis, (jivi) => {
+        return <Jivi jivi={jivi} root={this} />;
+          });
+    }
+
+    if(this.state.field != null) {
+      field_jivis = _.map(this.state.field, (jivi) => {
         return <Jivi jivi={jivi} root={this} />;
           });
     }
@@ -95,14 +102,13 @@ class MemoryGame extends React.Component {
           </div>
         </div>
         <div className="row">
-    	  <div className="col-sm">
-	    <div className="container" >
-              <div className="row">
-                <div className="col-md">Battle field here</div>
-              </div>
-            </div>
-          </div>
+	  { field_jivis }
           <button type="button" onClick={() => this.fight(0)}>Fight</button>
+        </div>
+        <div className="row">
+          <div className="col-md-6">
+            <h3>Field</h3>
+          </div>
         </div>
         <div className="row">
           { player1_jivis }
