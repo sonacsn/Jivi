@@ -15,7 +15,9 @@ class MemoryGame extends React.Component {
 		clicks: 0,
 		previous_card: null, 
 		disable_clicks: false, 
-		score: 100};
+		score: 100, 
+                player1: null,
+                player2: null};
 
     this.channel.join()
         .receive("ok", this.gotView.bind(this))
@@ -59,8 +61,33 @@ class MemoryGame extends React.Component {
   }
 
   render() {
+    let player1_jivis = "";
+    let player2_jivis = "";  
+    if(this.state.player1 != null) {
+      player1_jivis = _.map(this.state.player1.jivis, (jivi) => {
+        return <Jivi jivi={jivi} root={this} />;
+	  });
+    }
+    if(this.state.player2 != null) {
+      player2_jivis = _.map(this.state.player2.jivis, (jivi) => {
+        return <Jivi jivi={jivi} root={this} />;
+          });
+    }
+
+
+    if(this.state.player1==null){ player1_jivis=""; }
+    console.log("jivi list");
+    
     return (
       <div className="container">
+        <div className="row">
+          { player2_jivis }
+        </div>
+        <div className="row">
+          <div className="col-md-6">
+            <h3>Player 2</h3>
+          </div>
+        </div>
         <div className="row">
     	  <div className="col-sm">
 	    <div className="container" >
@@ -100,9 +127,27 @@ class MemoryGame extends React.Component {
             </div>
           </div>
         </div>
+        <div className="row">
+          { player1_jivis }
+        </div>
+        <div className="row">
+          <div className="col-md-6">
+            <h3>Player 1</h3>
+          </div>
+        </div>
       </div>
     );
   }
+}
+
+function Jivi(params) {
+  let root = params.root;
+  let state = root.state;
+  let jivi = params.jivi;
+  if(state.player1==null) {
+    return (<div><p>Loading---</p></div>);
+  }
+  return (<div className="col-md"><div className="card-back"></div></div>);
 }
 
 function Card(params) {

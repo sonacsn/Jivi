@@ -1,10 +1,13 @@
 defmodule Jivi.Game do
   def new do
+    {p1, p2} = new_players()
     %{
       scards: Enum.shuffle(start_board()),
       clicks: 0,
       disable_clicks: false,
-      matches: 0
+      matches: 0,
+      player1: p1,
+      player2: p2,
     }
   end
 
@@ -13,7 +16,9 @@ defmodule Jivi.Game do
       cards: game.scards,
       clicks: game.clicks,
       disable_clicks: game.disable_clicks,
-      score: score(game.matches, game.clicks)
+      score: score(game.matches, game.clicks),
+      player1: game.player1,
+      player2: game.player2
     }
   end
 
@@ -100,6 +105,25 @@ defmodule Jivi.Game do
     	%{value: "H", matched: false, show: false},
     ]
     cards
+  end
+
+  def initial_jivis do
+    jivis = [
+      %{name: "Pikachu", fire: 100, water: 30, selected: false, played: 0},
+      %{name: "Jigglypuff", fire: 30, water: 100, selected: false, played: 0},
+      %{name: "Squirtle", fire: 80, water: 50, selected: false, played: 0},
+      %{name: "Cherizard", fire: 500, water: 20, selected: false, played: 0},
+      %{name: "Snorlax", fire: 20, water: 500, selected: false, played: 0},
+      %{name: "Charmander", fire: 200, water: 60, selected: false, played: 0},
+    ]
+    Enum.shuffle(jivis) |> Enum.split(3)
+  end
+
+  def new_players do
+    {p1_jivis, p2_jivis} = initial_jivis()
+    player1 = %{name: "P1", turn: true, jivis: p1_jivis }
+    player2 = %{name: "P2", turn: false, jivis: p2_jivis}
+    { player1, player2 }
   end
 end
 
