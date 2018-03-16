@@ -111,14 +111,30 @@ defmodule Jivi.Game do
 
   def initial_jivis do
     jivis = [
-      %{name: "Pikachu", fire: 100, water: 30, selected: true, played: 0},
+      %{name: "Pikachu", fire: 100, water: 30, selected: false, played: 0},
       %{name: "Jigglypuff", fire: 30, water: 100, selected: false, played: 0},
       %{name: "Squirtle", fire: 80, water: 50, selected: false, played: 0},
-      %{name: "Cherizard", fire: 500, water: 20, selected: true, played: 0},
+      %{name: "Cherizard", fire: 500, water: 20, selected: false, played: 0},
       %{name: "Snorlax", fire: 20, water: 500, selected: false, played: 0},
       %{name: "Charmander", fire: 200, water: 60, selected: false, played: 0},
     ]
     Enum.shuffle(jivis) |> Enum.split(3)
+  end
+
+  def select(game, jivi, player) do
+    if game.player1.name == player["name"] do
+      jivis = game.player1.jivis
+      |> Enum.map(fn(j) -> if j.name==jivi["name"], do:  %{j | selected: true}, else: %{j | selected: false}
+      end)
+      p = Map.put(game.player1, :jivis, jivis)
+      Map.put(game, :player1, p)
+    else
+      jivis = game.player2.jivis
+      |> Enum.map(fn(j) -> if j.name==jivi["name"], do:  %{j | selected: true}, else: %{j | selected: false}
+      end)
+      p = Map.put(game.player2, :jivis, jivis)
+      Map.put(game, :player2, p)
+    end
   end
 
   def new_players do

@@ -50,7 +50,12 @@ defmodule JiviWeb.GamesChannel do
     socket = assign(socket, :game, game)
     {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
   end
-
+  def handle_in("select", %{"jivi" => ll, "player" => ll2}, socket) do
+    game = Game.select(socket.assigns[:game], ll, ll2)
+    Jivi.GameBackup.save(socket.assigns[:name], game)
+    socket = assign(socket, :game, game)
+    {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
+  end
   # Add authorization logic here as required.
   defp authorized?(_payload) do
     true
