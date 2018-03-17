@@ -98,31 +98,21 @@ class MemoryGame extends React.Component {
     
     return (
       <div className="container">
-        <div className="row">
+       <div className="row">
+        <div className="col-4">
           { player2_jivis }
+          <h3>Player 2</h3>
         </div>
-        <div className="row">
-          <div className="col-md-6">
-            <h3>Player 2</h3>
-          </div>
-        </div>
-        <div className="row">
+        <div className="col-4">
 	  { field_jivis }
-          <button type="button" onClick={() => this.fight(0)}>Fight</button>
+          <h3>Field</h3>
         </div>
-        <div className="row">
-          <div className="col-md-6">
-            <h3>Field</h3>
-          </div>
-        </div>
-        <div className="row">
+        <div className="col-4">
           { player1_jivis }
+          <h3>Player 1</h3>
         </div>
-        <div className="row">
-          <div className="col-md-6">
-            <h3>Player 1</h3>
-          </div>
-        </div>
+       </div>
+       <button type="button" onClick={() => this.fight(0)}>Fight</button>
       </div>
     );
   }
