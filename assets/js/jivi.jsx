@@ -70,6 +70,11 @@ class MemoryGame extends React.Component {
     this.channel.push("select", { jivi: jivi, player: player })
 	.receive("ok", this.gotView.bind(this));
   }
+ 
+  challenge(category) {
+    this.channel.push("challenge", { category: category })
+	.receive("ok", this.gotView.bind(this));
+  }
 
   render() {
     let player1_jivis = "";
@@ -99,17 +104,17 @@ class MemoryGame extends React.Component {
     return (
       <div className="container">
        <div className="row">
-        <div className="col-4">
+        <div className="col-md-3">
          <div className="player">
           { player2_jivis }
          </div>
         </div>
-        <div className="col-4">
-         <div className="field">
-	  { field_jivis }
-         </div>
+        <div className="col-md-6">
+          <div className="field">
+	    <Field root={this}/>
+          </div>
         </div>
-        <div className="col-4">
+        <div className="col-md-3">
          <div className="player">
           { player1_jivis }
          </div>
@@ -147,6 +152,24 @@ function Jivi(params) {
                 <p> Water : {jivi.water} </p> 
              </div>
           </div>);
+}
+
+function Field(params){
+  let state = params.root.state;
+  let field_jivis = "";
+  if(state.field != null) {
+      field_jivis = _.map(state.field, (jivi) => {
+           return <Jivi root={params.root} jivi={jivi}/>
+          });
+    }
+  if(field_jivis!=""){
+    return (<div> {field_jivis}
+		<p><button type="button" className="btn btn-warning" onClick={() => params.root.challenge("fire")}>Fire</button>
+               <button type="button" className="btn btn-info" onClick={() => params.root.challenge("water")}>Water</button>
+               <button type="button" className="btn btn-danger">Electricity</button>
+               <button type="button" className="btn btn-dark">Muscle</button></p></div>);
+  }
+  else{return(<div></div>);}
 }
 
 function Card(params) {

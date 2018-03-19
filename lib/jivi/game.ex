@@ -121,6 +121,101 @@ defmodule Jivi.Game do
     Enum.shuffle(jivis) |> Enum.split(3)
   end
 
+  def challenge(game, category) when category == "fire" do
+    IO.inspect "FIRE CHALLENGE"
+    [jivi1, jivi2] = game.field
+    winner = if jivi1.fire > jivi2.fire do
+      jivi2 = Map.put(jivi2, :owner, jivi1.owner)
+      jivi1.owner
+    else
+      jivi1 = Map.put(jivi1, :owner, jivi2.owner)
+      jivi2.owner
+    end
+    game = if winner == "P1" do
+      p_jivis = game.player1.jivis ++ [jivi1, jivi2]
+      player1 = Map.put(game.player1, :jivis, p_jivis)
+      IO.inspect "p1"
+      Map.put(game, :player1, player1)
+    else
+      p_jivis = game.player2.jivis ++ [jivi1, jivi2]
+      player2 = Map.put(game.player2, :jivis, p_jivis)
+      IO.inspect "p2"
+      Map.put(game, :player2, player2)
+    end
+    Map.put(game, :field, [])
+  end
+
+  def challenge(game, category) when category == "water" do
+    IO.inspect "WATER CHALLENGE"
+    [jivi1, jivi2] = game.field
+    winner = if jivi1.water > jivi2.water do
+      jivi2 = Map.put(jivi2, :owner, jivi1.owner)
+      jivi1.owner
+    else
+      jivi1 = Map.put(jivi1, :owner, jivi2.owner)
+      jivi2.owner
+    end
+    game = if winner == "P1" do
+      p_jivis = game.player1.jivis ++ [jivi1, jivi2]
+      player1 = Map.put(game.player1, :jivis, p_jivis)
+      IO.inspect "p1"
+      Map.put(game, :player1, player1)
+    else
+      p_jivis = game.player2.jivis ++ [jivi1, jivi2]
+      player2 = Map.put(game.player2, :jivis, p_jivis)
+      IO.inspect "p2"
+      Map.put(game, :player2, player2)
+    end
+    Map.put(game, :field, [])
+  end
+
+  def challenge(game, category) when category == "electricity" do
+    IO.inspect "ELECTRICITY CHALLENGE"
+    [jivi1, jivi2] = game.field
+    winner = if jivi1.electricity > jivi2.electricity do
+      jivi2 = Map.put(jivi2, :owner, jivi1.owner)
+      jivi1.owner
+    else
+      jivi1 = Map.put(jivi1, :owner, jivi2.owner)
+      jivi2.owner
+    end
+    game = if winner == "P1" do
+      p_jivis = game.player1.jivis ++ [jivi1, jivi2]
+      player1 = Map.put(game.player1, :jivis, p_jivis)
+      IO.inspect "p1"
+      Map.put(game, :player1, player1)
+    else
+      p_jivis = game.player2.jivis ++ [jivi1, jivi2]
+      player2 = Map.put(game.player2, :jivis, p_jivis)
+      IO.inspect "p2"
+      Map.put(game, :player2, player2)
+    end
+    Map.put(game, :field, [])
+  end
+  def challenge(game, category) when category == "muscle" do
+    IO.inspect "MUSCLE CHALLENGE"
+    [jivi1, jivi2] = game.field
+    winner = if jivi1.muscle > jivi2.muscle do
+      jivi2 = Map.put(jivi2, :owner, jivi1.owner)
+      jivi1.owner
+    else
+      jivi1 = Map.put(jivi1, :owner, jivi2.owner)
+      jivi2.owner
+    end
+    game = if winner == "P1" do
+      p_jivis = game.player1.jivis ++ [jivi1, jivi2]
+      player1 = Map.put(game.player1, :jivis, p_jivis)
+      IO.inspect "p1"
+      Map.put(game, :player1, player1)
+    else
+      p_jivis = game.player2.jivis ++ [jivi1, jivi2]
+      player2 = Map.put(game.player2, :jivis, p_jivis)
+      IO.inspect "p2"
+      Map.put(game, :player2, player2)
+    end
+    Map.put(game, :field, [])
+  end
+
   def select(game, jivi, player) do
     if game.player1.name == player["name"] do
       jivis = game.player1.jivis
@@ -139,6 +234,8 @@ defmodule Jivi.Game do
 
   def new_players do
     {p1_jivis, p2_jivis} = initial_jivis()
+    p1_jivis = Enum.map(p1_jivis, fn(j) -> Map.put(j, :owner, "P1") end)
+    p2_jivis = Enum.map(p2_jivis, fn(j) -> Map.put(j, :owner, "P2") end)
     player1 = %{name: "P1", turn: true, jivis: p1_jivis }
     player2 = %{name: "P2", turn: false, jivis: p2_jivis}
     { player1, player2 }
