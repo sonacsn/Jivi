@@ -271,20 +271,25 @@ defmodule Jivi.Game do
   ## Accepts the game state and trigger which is the challenge type
   ## Returns a game state where selected Jivis are removed from player list and are placed in field
   def fight(game, _trigger) do
-    player1_jivi = return_selected_jivi(game.player1.jivis)
-    player2_jivi = return_selected_jivi(game.player2.jivis)
-    game_update_field = Map.put(game, :field, [player1_jivi, player2_jivi])
- 
-    p1_old_state = game_update_field.player1
-    p1_new_state = Map.put(p1_old_state, :jivis, remove_jivi_from_list(p1_old_state.jivis))
-    game_update_p1jivis = Map.put(game_update_field, :player1, p1_new_state)
+   
+    ## If Player 1 has triggered fight
+    if(_trigger == 1) do
+      player1_jivi = return_selected_jivi(game.player1.jivis)
+      game = Map.put(game, :field, game.field ++ [player1_jivi])
 
-    p2_old_state = game_update_p1jivis.player2
-    p2_new_state = Map.put(p2_old_state, :jivis, remove_jivi_from_list(p2_old_state.jivis))
-    game_update_p2jivis = Map.put(game_update_p1jivis, :player2, p2_new_state)
+      p1_old_state = game.player1
+      p1_new_state = Map.put(p1_old_state, :jivis, remove_jivi_from_list(p1_old_state.jivis))
+      Map.put(game, :player1, p1_new_state)
 
-    game_update_p2jivis
+    else
+      player2_jivi = return_selected_jivi(game.player2.jivis)
+      game = Map.put(game, :field, game.field ++ [player2_jivi])
 
+      p2_old_state = game.player2
+      p2_new_state = Map.put(p2_old_state, :jivis, remove_jivi_from_list(p2_old_state.jivis))
+      Map.put(game, :player2, p2_new_state)
+    end
   end
+
 end
 

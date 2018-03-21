@@ -107,6 +107,7 @@ class MemoryGame extends React.Component {
         <div className="col-md-3">
          <div className="player">
           { player2_jivis }
+          <button type="button" onClick={() => this.fight(2)}>Ready</button>
          </div>
         </div>
         <div className="col-md-6">
@@ -117,6 +118,7 @@ class MemoryGame extends React.Component {
         <div className="col-md-3">
          <div className="player">
           { player1_jivis }
+          <button type="button" onClick={() => this.fight(1)}>Ready</button>
          </div>
         </div>
        </div>
@@ -131,7 +133,6 @@ class MemoryGame extends React.Component {
             <h3>Player 1</h3>
           </div>
        </div>
-       <button type="button" onClick={() => this.fight(0)}>Fight</button>
       </div>
     );
   }
