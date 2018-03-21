@@ -5,6 +5,7 @@ defmodule JiviWeb.PageController do
     render conn, "index.html"
   end
   def game(conn, params) do
-    render conn, "game.html", game: params["game"]
+    IO.inspect params
+    render conn, "game.html", game: params["game"], player: params["player"]
   end
 end

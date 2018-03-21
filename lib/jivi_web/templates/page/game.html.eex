@@ -3,6 +3,7 @@
     <h1>Jivi Game: <%= @game %></h1>
     <script>
       window.gameName = "<%= @game %>";
+      window.playerName = "<%= @player %>";
     </script>
     <div id="root">
       <p>React app not loaded...</p>

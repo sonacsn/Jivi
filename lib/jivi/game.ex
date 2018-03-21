@@ -7,6 +7,7 @@ defmodule Jivi.Game do
       disable_clicks: false,
       matches: 0,
       player1: p1,
+      players: [],
       player2: p2,
       field: []
     }
@@ -14,13 +15,10 @@ defmodule Jivi.Game do
 
   def client_view(game) do
     %{
-      cards: game.scards,
-      clicks: game.clicks,
-      disable_clicks: game.disable_clicks,
-      score: score(game.matches, game.clicks),
       player1: game.player1,
       player2: game.player2,
-      field: game.field
+      field: game.field,
+      players: game.players
     }
   end
 

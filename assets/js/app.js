@@ -35,7 +35,7 @@ import socket from "./socket";
 import game_init from "./jivi";
 
 function form_init() {
-  let channel = socket.channel("games:demo", {});
+  let channel = socket.channel("games:demo", "player:demo", {});
   channel.join()
          .receive("ok", resp => { console.log("Joined successfully", resp) })
          .receive("error", resp => { console.log("Unable to join", resp) });
@@ -44,7 +44,7 @@ function form_init() {
 function start() {
   let root = document.getElementById('root');
   if (root) {
-    let channel = socket.channel("games:" + window.gameName, {});
+    let channel = socket.channel("games:" + window.gameName,"player:" + window.playerName, {});
     game_init(root, channel);
   }
 
