@@ -124,6 +124,8 @@ defmodule Jivi.Game do
   def challenge(game, category) when category == "fire" do
     IO.inspect "FIRE CHALLENGE"
     [jivi1, jivi2] = game.field
+    jivi1 = Map.put(jivi1, :selected, false)
+    jivi2 = Map.put(jivi2, :selected, false)
     winner = if jivi1.fire > jivi2.fire do
       jivi2 = Map.put(jivi2, :owner, jivi1.owner)
       jivi1.owner
@@ -148,6 +150,8 @@ defmodule Jivi.Game do
   def challenge(game, category) when category == "water" do
     IO.inspect "WATER CHALLENGE"
     [jivi1, jivi2] = game.field
+    jivi1 = Map.put(jivi1, :selected, false)
+    jivi2 = Map.put(jivi2, :selected, false)
     winner = if jivi1.water > jivi2.water do
       jivi2 = Map.put(jivi2, :owner, jivi1.owner)
       jivi1.owner
@@ -172,6 +176,8 @@ defmodule Jivi.Game do
   def challenge(game, category) when category == "electricity" do
     IO.inspect "ELECTRICITY CHALLENGE"
     [jivi1, jivi2] = game.field
+    jivi1 = Map.put(jivi1, :selected, false)
+    jivi2 = Map.put(jivi2, :selected, false)
     winner = if jivi1.electricity > jivi2.electricity do
       jivi2 = Map.put(jivi2, :owner, jivi1.owner)
       jivi1.owner
@@ -192,9 +198,12 @@ defmodule Jivi.Game do
     end
     Map.put(game, :field, [])
   end
+
   def challenge(game, category) when category == "muscle" do
     IO.inspect "MUSCLE CHALLENGE"
     [jivi1, jivi2] = game.field
+    jivi1 = Map.put(jivi1, :selected, false)
+    jivi2 = Map.put(jivi2, :selected, false)
     winner = if jivi1.muscle > jivi2.muscle do
       jivi2 = Map.put(jivi2, :owner, jivi1.owner)
       jivi1.owner
