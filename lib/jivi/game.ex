@@ -111,12 +111,12 @@ defmodule Jivi.Game do
 
   def initial_jivis do
     jivis = [
-      %{name: "Pikachu", fire: 100, water: 30, selected: false, played: 0},
-      %{name: "Jigglypuff", fire: 30, water: 100, selected: false, played: 0},
-      %{name: "Squirtle", fire: 80, water: 50, selected: false, played: 0},
-      %{name: "Cherizard", fire: 500, water: 20, selected: false, played: 0},
-      %{name: "Snorlax", fire: 20, water: 500, selected: false, played: 0},
-      %{name: "Charmander", fire: 200, water: 60, selected: false, played: 0},
+      %{name: "Pikachu", fire: 100, water: 30, electricity: 500, muscle: 80, selected: false, played: 0},
+      %{name: "Jigglypuff", fire: 30, water: 100, electricity: 30, muscle: 20, selected: false, played: 0},
+      %{name: "Squirtle", fire: 80, water: 50, electricity: 50, muscle: 60, selected: false, played: 0},
+      %{name: "Cherizard", fire: 500, water: 20, electricity: 100, muscle: 100, selected: false, played: 0},
+      %{name: "Snorlax", fire: 20, water: 500, electricity: 20, muscle: 500, selected: false, played: 0},
+      %{name: "Charmander", fire: 200, water: 60, electricity: 80, muscle: 40, selected: false, played: 0},
     ]
     Enum.shuffle(jivis) |> Enum.split(3)
   end

@@ -149,17 +149,21 @@ function Jivi(params) {
   if(jivi.selected == true) {
   return (<div className="col-md">
              <div className="jivi-selected" onClick={() => root.select(jivi, player)}>
-                <p> Jivi  : {jivi.name} </p>
-                <p> Fire  : {jivi.fire} </p>
-                <p> Water : {jivi.water} </p> 
+                <p> Jivi    : {jivi.name} </p>
+                <p> Fire    : {jivi.fire} </p>
+                <p> Water   : {jivi.water} </p>
+		<p> Electric: {jivi.electricity} </p>
+		<p> Muscle  : {jivi.muscle} </p> 
              </div>
           </div>);
   }
   return (<div className="col-md">
              <div className="jivi-front" onClick={() => root.select(jivi, player)}>
-                <p> Jivi  : {jivi.name} </p>
-                <p> Fire  : {jivi.fire} </p>
-                <p> Water : {jivi.water} </p> 
+                <p> Jivi    : {jivi.name} </p>
+                <p> Fire    : {jivi.fire} </p>
+                <p> Water   : {jivi.water} </p>
+		<p> Electric: {jivi.electricity} </p>
+		<p> Muscle  : {jivi.muscle} </p> 
              </div>
           </div>);
 }
@@ -189,8 +193,8 @@ function Field(params){
     return (<div> {field_jivis}
 		<p><button type="button" className="btn btn-warning" onClick={() => params.root.challenge("fire")}>Fire</button>
                <button type="button" className="btn btn-info" onClick={() => params.root.challenge("water")}>Water</button>
-               <button type="button" className="btn btn-danger">Electricity</button>
-               <button type="button" className="btn btn-dark">Muscle</button></p></div>);
+               <button type="button" className="btn btn-danger" onClick={() => params.root.challenge("electricity")}>Electricity</button>
+               <button type="button" className="btn btn-dark" onClick={() => params.root.challenge("muscle")}>Muscle</button></p></div>);
   }
   else{return(<div></div>);}
 }
