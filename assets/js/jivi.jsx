@@ -10,15 +10,20 @@ class JiviGame extends React.Component {
   constructor(props) {
     super(props);
     this.channel = props.channel;
+    console.log("constructor");
     this.state = {
                 player1: null,
                 player2: null,
+		players: null,
 		field: null};
-
+    this.current_player = "";
+ 
     this.channel.join()
-        .receive("ok", this.gotView.bind(this))
+        .receive("ok", resp => { this.current_player = resp.player;
+				this.gotView(resp);})
         .receive("error", resp => { console.log("Unable to join", resp) });
-  }
+	 this.channel.on("fight", msg => {console.log("fight message", msg);} );  
+}
 
   gotView(view) {
     console.log("New view", view);
@@ -26,7 +31,7 @@ class JiviGame extends React.Component {
   }
 
   fight(trigger) {
-     this.channel.push("fight", { trigger: trigger })
+	 this.channel.push("fight", { trigger: trigger })
          .receive("ok", this.gotView.bind(this));
   }
 
@@ -44,6 +49,8 @@ class JiviGame extends React.Component {
     let player1_jivis = "";
     let player2_jivis = "";  
     let field_jivis = "";
+    console.log(this.state.players);
+    console.log(this.current_player);
     if(this.state.player1 != null) {
       player1_jivis = _.map(this.state.player1.jivis, (jivi) => {
         return <Jivi jivi={jivi} root={this} player={this.state.player1}/>;
@@ -63,7 +70,6 @@ class JiviGame extends React.Component {
 
 
     if(this.state.player1==null){ player1_jivis=""; }
-    console.log("jivi list");
     
     return (
       <div className="container">

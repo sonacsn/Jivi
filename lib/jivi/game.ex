@@ -3,6 +3,7 @@ defmodule Jivi.Game do
     {p1, p2} = new_players()
     %{
       player1: p1,
+      players: [],
       player2: p2,
       field: []
     }
@@ -12,7 +13,8 @@ defmodule Jivi.Game do
     %{
       player1: game.player1,
       player2: game.player2,
-      field: game.field
+      field: game.field,
+      players: game.players
     }
   end
 

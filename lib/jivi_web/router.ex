@@ -17,7 +17,9 @@ defmodule JiviWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
-    get "/game/:game", PageController, :game
+    # get "/game/:game", PageController, :game
+    IO.puts "in page controller"
+    get "/game/:game/player/:player", PageController, :game
   end
 
   # Other scopes may use custom stacks.
