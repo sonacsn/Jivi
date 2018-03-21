@@ -145,6 +145,15 @@ function Jivi(params) {
   if(state.player1==null) {
     return (<div><p>Loading---</p></div>);
   }
+  if(jivi.selected == true) {
+  return (<div className="col-md">
+             <div className="jivi-selected" onClick={() => root.select(jivi, player)}>
+                <p> Jivi  : {jivi.name} </p>
+                <p> Fire  : {jivi.fire} </p>
+                <p> Water : {jivi.water} </p> 
+             </div>
+          </div>);
+  }
   return (<div className="col-md">
              <div className="jivi-front" onClick={() => root.select(jivi, player)}>
                 <p> Jivi  : {jivi.name} </p>

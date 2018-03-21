@@ -74,6 +74,17 @@ h1 {
 	display: inline-block;
 }
 
+.jivi-selected {
+        background-color: orange;
+        width: 70%;
+        height: 100px;
+        margin: auto;
+        padding: 5px;
+        text-align: center;
+        font-size: 90%;
+	display: inline-block;
+}
+
 .card-back {
 	background-color: palevioletred;
 	width: 70%;
