@@ -163,12 +163,25 @@ function Jivi(params) {
           </div>);
 }
 
+function FieldJivi(params) {
+  let root = params.root;
+  let state = root.state;
+  let jivi = params.jivi;
+  if(state.player1==null) {
+    return (<div><p>Loading---</p></div>);
+  }
+  return (<div className="col-md">
+             <div className="jivi-selected">
+             </div>
+          </div>);
+}
+
 function Field(params){
   let state = params.root.state;
   let field_jivis = "";
   if(state.field != null) {
       field_jivis = _.map(state.field, (jivi) => {
-           return <Jivi root={params.root} jivi={jivi}/>
+           return <FieldJivi root={params.root} jivi={jivi}/>
           });
     }
   if(field_jivis!=""){
