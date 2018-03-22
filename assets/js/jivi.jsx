@@ -181,6 +181,17 @@ function ButtonFun2(params) {
 
 function Message(params) {
   let state = params.root.state;
+  if(state.player1 != null && state.player1.turn == true) {
+    return Message1(params)
+  } else if(state.player2 != null && state.player2.turn == true) {
+    return Message2(params)
+  } else {
+    return (<div> </div>)
+  } 
+}
+
+function Message1(params) {
+  let state = params.root.state;
   if(state.player1 != null && state.player2 != null) {
     if(state.player1.turn == true && state.player1.ready == 0) {
       return (<h3> Waiting for Player1 to select Jivi </h3>)
@@ -191,6 +202,26 @@ function Message(params) {
     } else if(state.player1.ready == 2 && state.player2.ready == 1) {
       return (<h3> Waiting for Player 2 to Send Jivi to Field </h3>)
     } else if(state.player1.ready == 2 && state.player2.ready == 2) {
+      return (<h3> Waiting to Challenge </h3>)
+    } else {
+      return (<h3> No message </h3>)   
+    }
+  }
+  return (<div> </div>)
+}
+
+function Message2(params) {
+  let state = params.root.state;
+  if(state.player1 != null && state.player2 != null) {
+    if(state.player2.turn == true && state.player2.ready == 0) {
+      return (<h3> Waiting for Player2 to select Jivi </h3>)
+    } else if(state.player2.ready == 1) {
+      return (<h3> Waiting for Player 2 to Send Jivi to Field </h3>)
+    } else if(state.player2.ready == 2 && state.player1.ready == 0) {
+      return (<h3> Waiting for Player 1 to select Jivi </h3>)
+    } else if(state.player2.ready == 2 && state.player1.ready == 1) {
+      return (<h3> Waiting for Player 1 to Send Jivi to Field </h3>)
+    } else if(state.player2.ready == 2 && state.player1.ready == 2) {
       return (<h3> Waiting to Challenge </h3>)
     } else {
       return (<h3> No message </h3>)   
