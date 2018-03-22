@@ -53,6 +53,13 @@ defmodule Jivi.Game do
       IO.inspect "p2"
       Map.put(game, :player2, player2)
     end
+    
+    p = Map.put(game.player1, :ready, 0)
+    game = Map.put(game, :player1, p)
+
+    p = Map.put(game.player2, :ready, 0)
+    game = Map.put(game, :player2, p)
+
     Map.put(game, :field, [])
   end
 
@@ -79,6 +86,13 @@ defmodule Jivi.Game do
       IO.inspect "p2"
       Map.put(game, :player2, player2)
     end
+
+    p = Map.put(game.player1, :ready, 0)
+    game = Map.put(game, :player1, p)
+
+    p = Map.put(game.player2, :ready, 0)
+    game = Map.put(game, :player2, p)
+
     Map.put(game, :field, [])
   end
 
@@ -105,6 +119,13 @@ defmodule Jivi.Game do
       IO.inspect "p2"
       Map.put(game, :player2, player2)
     end
+
+    p = Map.put(game.player1, :ready, 0)
+    game = Map.put(game, :player1, p)
+
+    p = Map.put(game.player2, :ready, 0)
+    game = Map.put(game, :player2, p)
+
     Map.put(game, :field, [])
   end
 
@@ -131,6 +152,13 @@ defmodule Jivi.Game do
       IO.inspect "p2"
       Map.put(game, :player2, player2)
     end
+
+    p = Map.put(game.player1, :ready, 0)
+    game = Map.put(game, :player1, p)
+
+    p = Map.put(game.player2, :ready, 0)
+    game = Map.put(game, :player2, p)
+
     Map.put(game, :field, [])
   end
 
@@ -140,12 +168,14 @@ defmodule Jivi.Game do
       |> Enum.map(fn(j) -> if j.name==jivi["name"], do:  %{j | selected: true}, else: %{j | selected: false}
       end)
       p = Map.put(game.player1, :jivis, jivis)
+      p = Map.put(p, :ready, 1)
       Map.put(game, :player1, p)
     else
       jivis = game.player2.jivis
       |> Enum.map(fn(j) -> if j.name==jivi["name"], do:  %{j | selected: true}, else: %{j | selected: false}
       end)
       p = Map.put(game.player2, :jivis, jivis)
+      p = Map.put(p, :ready, 1)
       Map.put(game, :player2, p)
     end
   end
@@ -154,8 +184,8 @@ defmodule Jivi.Game do
     {p1_jivis, p2_jivis} = initial_jivis()
     p1_jivis = Enum.map(p1_jivis, fn(j) -> Map.put(j, :owner, "P1") end)
     p2_jivis = Enum.map(p2_jivis, fn(j) -> Map.put(j, :owner, "P2") end)
-    player1 = %{name: "P1", turn: true, jivis: p1_jivis }
-    player2 = %{name: "P2", turn: false, jivis: p2_jivis}
+    player1 = %{name: "P1", turn: true, jivis: p1_jivis, ready: 0 }
+    player2 = %{name: "P2", turn: false, jivis: p2_jivis, ready: 0 }
     { player1, player2 }
   end
 
@@ -188,6 +218,7 @@ defmodule Jivi.Game do
 
       p1_old_state = game.player1
       p1_new_state = Map.put(p1_old_state, :jivis, remove_jivi_from_list(p1_old_state.jivis))
+      p1_new_state = Map.put(p1_new_state, :ready, 2)
       Map.put(game, :player1, p1_new_state)
 
     else
@@ -196,6 +227,7 @@ defmodule Jivi.Game do
 
       p2_old_state = game.player2
       p2_new_state = Map.put(p2_old_state, :jivis, remove_jivi_from_list(p2_old_state.jivis))
+      p2_new_state = Map.put(p2_new_state, :ready, 2)
       Map.put(game, :player2, p2_new_state)
     end
   end
