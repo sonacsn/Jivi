@@ -98,8 +98,8 @@ class JiviGame extends React.Component {
        <div className="row">
         <div className="col-md-3">
          <div className="player">
-	  <h3>{player1}</h3>
-          <p>{ player1_jivis }</p>
+	  <h3><p>{player1}</p></h3>
+          { player1_jivis }
           <ButtonFun1 root={this}/>
          </div>
         </div>
@@ -110,8 +110,8 @@ class JiviGame extends React.Component {
         </div>
         <div className="col-md-3">
          <div className="player">
-	  <h3>{player2}</h3>
-          <p>{ player2_jivis }</p>
+	  <h3><p>{player2}</p></h3>
+          { player2_jivis }
           <ButtonFun2 root={this}/>
          </div>
         </div>
