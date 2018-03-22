@@ -97,7 +97,7 @@ class JiviGame extends React.Component {
          <div className="player">
 	  <h3>{player1}</h3>
           <p>{ player1_jivis }</p>
-          <button type="button" onClick={() => this.fight(1)}>Ready</button>
+          <ButtonFun1 root={this}/>
          </div>
         </div>
         <div className="col-md-6">
@@ -109,7 +109,7 @@ class JiviGame extends React.Component {
          <div className="player">
 	  <h3>{player2}</h3>
           <p>{ player2_jivis }</p>
-          <button type="button" onClick={() => this.fight(2)}>Ready</button>
+          <ButtonFun2 root={this}/>
          </div>
         </div>
        </div>
@@ -150,6 +150,30 @@ function Jivi(params) {
 		<p> Muscle  : {jivi.muscle} </p> 
              </div>
           </div>);
+}
+
+function ButtonFun1(params) {
+  let state = params.root.state;
+  if(state.player1 != null) {
+    if((state.player1.turn == false && state.player2.ready == 2) || state.player1.turn == true) {
+      if(state.player1.ready == 1) {
+	return (<button type="button" onClick={() => params.root.fight(1)}>Ready</button>)
+      }
+    }
+  }
+  return <div> </div>
+}
+
+function ButtonFun2(params) {
+  let state = params.root.state;
+  if(state.player2 != null) {
+    if((state.player2.turn == false && state.player1.ready == 2) || state.player2.turn == true) {
+      if(state.player2.ready == 1) {
+	return (<button type="button" onClick={() => params.root.fight(2)}>Ready</button>)
+      }
+    }
+  }
+  return <div> </div>
 }
 
 function FieldJivi(params) {
