@@ -93,6 +93,9 @@ class JiviGame extends React.Component {
     return (
       <div className="container">
        <div className="row">
+        <Message root={this}/>
+       </div>
+       <div className="row">
         <div className="col-md-3">
          <div className="player">
 	  <h3>{player1}</h3>
@@ -174,6 +177,26 @@ function ButtonFun2(params) {
     }
   }
   return <div> </div>
+}
+
+function Message(params) {
+  let state = params.root.state;
+  if(state.player1 != null && state.player2 != null) {
+    if(state.player1.turn == true && state.player1.ready == 0) {
+      return (<h3> Waiting for Player1 to select Jivi </h3>)
+    } else if(state.player1.ready == 1) {
+      return (<h3> Waiting for Player 1 to Send Jivi to Field </h3>)
+    } else if(state.player1.ready == 2 && state.player2.ready == 0) {
+      return (<h3> Waiting for Player 2 to select Jivi </h3>)
+    } else if(state.player1.ready == 2 && state.player2.ready == 1) {
+      return (<h3> Waiting for Player 2 to Send Jivi to Field </h3>)
+    } else if(state.player1.ready == 2 && state.player2.ready == 2) {
+      return (<h3> Waiting to Challenge </h3>)
+    } else {
+      return (<h3> No message </h3>)   
+    }
+  }
+  return (<div> </div>)
 }
 
 function FieldJivi(params) {
