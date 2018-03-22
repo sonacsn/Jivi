@@ -116,6 +116,7 @@ class JiviGame extends React.Component {
          </div>
         </div>
        </div>
+       <img src="/images/pikachu.jpeg" alt="Image not displayed" width="42" height="42"/>
       </div>
     );
   }
