@@ -149,9 +149,11 @@ function Jivi(params) {
 function ButtonFun1(params) {
   let state = params.root.state;
   if(state.player1 != null) {
-     if(state.player1.ready == 1) {
+    if((state.player1.turn == false && state.player2.ready == 2) || state.player1.turn == true) {
+      if(state.player1.ready == 1) {
 	return (<button type="button" onClick={() => params.root.fight(1)}>Ready</button>)
-     }
+      }
+    }
   }
   return <div> </div>
 }
@@ -159,9 +161,11 @@ function ButtonFun1(params) {
 function ButtonFun2(params) {
   let state = params.root.state;
   if(state.player2 != null) {
-     if(state.player2.ready == 1) {
+    if((state.player2.turn == false && state.player1.ready == 2) || state.player2.turn == true) {
+      if(state.player2.ready == 1) {
 	return (<button type="button" onClick={() => params.root.fight(2)}>Ready</button>)
-     }
+      }
+    }
   }
   return <div> </div>
 }
