@@ -23,25 +23,41 @@ defmodule JiviWeb.GamesChannel do
     end
   end
 
-  def handle_in("fight", %{"trigger" => ll}, socket) do
-    game = Game.fight(socket.assigns[:game], ll)
+  def handle_in("select", %{"jivi" => ll, "player" => ll2}, socket) do
+    game = Game.select(socket.assigns[:game], ll, ll2)
     Jivi.GameBackup.save(socket.assigns[:name], game)
-    broadcast socket, "fight", %{ "game" => Game.client_view(game)}
     socket = assign(socket, :game, game)
     {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
   end
-  def handle_in("select", %{"jivi" => ll, "player" => ll2}, socket) do
-    game = Game.select(socket.assigns[:game], ll, ll2)
-    IO.puts "handle fight"
-    Jivi.GameBackup.save(socket.assigns[:name], game)
-    socket = assign(socket, :game, game)
-    {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
+  def handle_in("fight", %{"trigger" => ll}, socket) do
+    IO.puts "called"
+    game = Game.fight(socket.assigns[:game], ll)
+    broadcast socket, "fight", %{ "game" => game }
+    #Jivi.GameBackup.save(socket.assigns[:name], game)
+    #socket = assign(socket, :game, game)
+    {:noreply, socket}
   end
   def handle_in("challenge", %{"category" => ll}, socket) do
     game = Game.challenge(socket.assigns[:game], ll)
-    Jivi.GameBackup.save(socket.assigns[:name], game)
+    #Jivi.GameBackup.save(socket.assigns[:name], game)
+    broadcast socket, "challenge", %{"game" => game}
+    #socket = assign(socket, :game, game)
+    {:noreply, socket}
+  end
+  
+  intercept ["fight", "challenge"]
+  def handle_out("fight", payload, socket) do
+    game = payload["game"]
     socket = assign(socket, :game, game)
-    {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
+    Jivi.GameBackup.save(socket.assigns[:name], game)
+    broadcast socket, "render_fight", %{"game" => game}
+    {:noreply, socket}
+  end
+  def handle_out("challenge", %{"game" => game}, socket) do
+    socket = assign(socket, :game, game)
+    Jivi.GameBackup.save(socket.assigns[:name], game)
+    broadcast socket, "render_challenge", %{"game" => game}
+    {:noreply, socket}
   end
 
   # Add authorization logic here as required.

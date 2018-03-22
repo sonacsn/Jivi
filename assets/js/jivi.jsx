@@ -10,20 +10,26 @@ class JiviGame extends React.Component {
   constructor(props) {
     super(props);
     this.channel = props.channel;
-    console.log("constructor");
+
     this.state = {
                 player1: null,
                 player2: null,
 		players: null,
-		field: null};
+		field: null
+               };
     this.current_player = "";
  
     this.channel.join()
         .receive("ok", resp => { this.current_player = resp.player;
 				this.gotView(resp);})
         .receive("error", resp => { console.log("Unable to join", resp) });
-	 this.channel.on("fight", msg => {console.log("fight message", msg);} );  
-}
+
+    this.channel.on("render_challenge", resp => this.gotView(resp));  
+	 
+    this.channel.on("render_fight", resp => this.gotView(resp));  
+
+  }
+
 
   gotView(view) {
     console.log("New view", view);
@@ -49,8 +55,11 @@ class JiviGame extends React.Component {
     let player1_jivis = "";
     let player2_jivis = "";  
     let field_jivis = "";
+    let player1, player2 = ""
     console.log(this.state.players);
     console.log(this.current_player);
+
+    if(this.state.player1==null){ player1_jivis=""; }
     if(this.state.player1 != null) {
       player1_jivis = _.map(this.state.player1.jivis, (jivi) => {
         return <Jivi jivi={jivi} root={this} player={this.state.player1}/>;
@@ -61,23 +70,28 @@ class JiviGame extends React.Component {
         return <Jivi jivi={jivi} root={this} player={this.state.player2}/>;
           });
     }
-
     if(this.state.field != null) {
       field_jivis = _.map(this.state.field, (jivi) => {
         return <Jivi jivi={jivi} root={this} />;
           });
     }
-
-
-    if(this.state.player1==null){ player1_jivis=""; }
+    if(this.state.players != null && this.current_player == this.state.players[0]){
+	player1 = this.current_player;
+	player2 = "Other Player";
+    }
+    else if(this.state.players != null && this.state.players.length > 1){
+	player1 = "Other Player";
+	player2 = this.state.players[1];
+    }
     
     return (
       <div className="container">
        <div className="row">
         <div className="col-md-3">
          <div className="player">
-          { player2_jivis }
-          <button type="button" onClick={() => this.fight(2)}>Ready</button>
+	  <h3>{player1}</h3>
+          <p>{ player1_jivis }</p>
+          <button type="button" onClick={() => this.fight(1)}>Ready</button>
          </div>
         </div>
         <div className="col-md-6">
@@ -87,21 +101,11 @@ class JiviGame extends React.Component {
         </div>
         <div className="col-md-3">
          <div className="player">
-          { player1_jivis }
-          <button type="button" onClick={() => this.fight(1)}>Ready</button>
+	  <h3>{player2}</h3>
+          <p>{ player2_jivis }</p>
+          <button type="button" onClick={() => this.fight(2)}>Ready</button>
          </div>
         </div>
-       </div>
-       <div className="row">
-          <div className="col-4">
-            <h3>Player 2</h3>
-          </div>
-          <div className="col-4">
-            <h3>Field</h3>
-          </div>
-          <div className="col-4">
-            <h3>Player 1</h3>
-          </div>
        </div>
       </div>
     );
@@ -116,7 +120,11 @@ function Jivi(params) {
   if(state.player1==null) {
     return (<div><p>Loading---</p></div>);
   }
-  if(jivi.selected == true) {
+ // if(player.name!=root.current_player){
+   // console.log(player.name);
+    //return (<div className="col-md"><div className="jivi-selected"></div></div>);
+ // }
+  if(jivi.selected) {
   return (<div className="col-md">
              <div className="jivi-selected" onClick={() => root.select(jivi, player)}>
                 <p> Jivi    : {jivi.name} </p>
