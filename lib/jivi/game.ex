@@ -30,6 +30,22 @@ defmodule Jivi.Game do
     Enum.shuffle(jivis) |> Enum.split(3)
   end
 
+  def change_turn(game) do
+    if(game.player1.turn == true) do
+       player1 = Map.put(game.player1, :turn, false)
+       game = Map.put(game, :player1, player1)
+       player2 = Map.put(game.player2, :turn, true)
+       Map.put(game, :player2, player2)
+
+    else
+       player2 = Map.put(game.player2, :turn, false)
+       game = Map.put(game, :player2, player2)
+       player1 = Map.put(game.player1, :turn, true)
+       Map.put(game, :player1, player1)
+    end
+
+  end
+
   def challenge(game, category) when category == "fire" do
     IO.inspect "FIRE CHALLENGE"
     [jivi1, jivi2] = game.field
@@ -51,6 +67,8 @@ defmodule Jivi.Game do
       player2 = Map.put(game.player2, :jivis, p_jivis)
       Map.put(game, :player2, player2)
     end
+
+    game = change_turn(game)
     
     p = Map.put(game.player1, :ready, 0)
     game = Map.put(game, :player1, p)
@@ -83,6 +101,8 @@ defmodule Jivi.Game do
       Map.put(game, :player2, player2)
     end
 
+    game = change_turn(game)
+
     p = Map.put(game.player1, :ready, 0)
     game = Map.put(game, :player1, p)
 
@@ -114,6 +134,8 @@ defmodule Jivi.Game do
       Map.put(game, :player2, player2)
     end
 
+    game = change_turn(game)
+
     p = Map.put(game.player1, :ready, 0)
     game = Map.put(game, :player1, p)
 
@@ -144,6 +166,8 @@ defmodule Jivi.Game do
       player2 = Map.put(game.player2, :jivis, p_jivis)
       Map.put(game, :player2, player2)
     end
+
+    game = change_turn(game)
 
     p = Map.put(game.player1, :ready, 0)
     game = Map.put(game, :player1, p)
