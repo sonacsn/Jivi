@@ -22,7 +22,6 @@ class JiviGame extends React.Component {
     this.channel.join()
         .receive("ok", resp => { this.current_player = resp.player;
 				 this.putPlayerName(this.current_player);
-				 this.gotView(resp);
 				})
         .receive("error", resp => { console.log("Unable to join", resp) });
 
@@ -30,7 +29,7 @@ class JiviGame extends React.Component {
 	 
     this.channel.on("render_fight", resp => this.gotView(resp));  
 
-    this.channel.on("put_player_name", resp => console.log("listener", resp));
+    this.channel.on("put_player_name", resp => this.gotView(resp));
   }
 
   gotView(view) {

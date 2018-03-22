@@ -42,15 +42,13 @@ defmodule Jivi.Game do
       jivi1 = Map.put(jivi1, :owner, jivi2.owner)
       jivi2.owner
     end
-    game = if winner == "P1" do
+    game = if winner == game.player1.name do
       p_jivis = game.player1.jivis ++ [jivi1, jivi2]
       player1 = Map.put(game.player1, :jivis, p_jivis)
-      IO.inspect "p1"
       Map.put(game, :player1, player1)
     else
       p_jivis = game.player2.jivis ++ [jivi1, jivi2]
       player2 = Map.put(game.player2, :jivis, p_jivis)
-      IO.inspect "p2"
       Map.put(game, :player2, player2)
     end
     Map.put(game, :field, [])
@@ -68,15 +66,13 @@ defmodule Jivi.Game do
       jivi1 = Map.put(jivi1, :owner, jivi2.owner)
       jivi2.owner
     end
-    game = if winner == "P1" do
+    game = if winner == game.player1.name do
       p_jivis = game.player1.jivis ++ [jivi1, jivi2]
       player1 = Map.put(game.player1, :jivis, p_jivis)
-      IO.inspect "p1"
       Map.put(game, :player1, player1)
     else
       p_jivis = game.player2.jivis ++ [jivi1, jivi2]
       player2 = Map.put(game.player2, :jivis, p_jivis)
-      IO.inspect "p2"
       Map.put(game, :player2, player2)
     end
     Map.put(game, :field, [])
@@ -94,15 +90,13 @@ defmodule Jivi.Game do
       jivi1 = Map.put(jivi1, :owner, jivi2.owner)
       jivi2.owner
     end
-    game = if winner == "P1" do
+    game = if winner == game.player1.name do
       p_jivis = game.player1.jivis ++ [jivi1, jivi2]
       player1 = Map.put(game.player1, :jivis, p_jivis)
-      IO.inspect "p1"
       Map.put(game, :player1, player1)
     else
       p_jivis = game.player2.jivis ++ [jivi1, jivi2]
       player2 = Map.put(game.player2, :jivis, p_jivis)
-      IO.inspect "p2"
       Map.put(game, :player2, player2)
     end
     Map.put(game, :field, [])
@@ -120,15 +114,13 @@ defmodule Jivi.Game do
       jivi1 = Map.put(jivi1, :owner, jivi2.owner)
       jivi2.owner
     end
-    game = if winner == "P1" do
+    game = if winner == game.player1.name do
       p_jivis = game.player1.jivis ++ [jivi1, jivi2]
       player1 = Map.put(game.player1, :jivis, p_jivis)
-      IO.inspect "p1"
       Map.put(game, :player1, player1)
     else
       p_jivis = game.player2.jivis ++ [jivi1, jivi2]
       player2 = Map.put(game.player2, :jivis, p_jivis)
-      IO.inspect "p2"
       Map.put(game, :player2, player2)
     end
     Map.put(game, :field, [])
