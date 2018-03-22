@@ -29,6 +29,15 @@ defmodule JiviWeb.GamesChannel do
     socket = assign(socket, :game, game)
     {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
   end
+  def handle_in("player", %{"name" => ll}, socket) do
+    game = Game.put_player(socket.assigns[:game], ll)
+#    Jivi.GameBackup.save(socket.assigns[:name], game)
+#    socket = assign(socket, :game, game)
+#    {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
+    broadcast socket, "player", game
+    {:noreply, socket}
+  end
+
   def handle_in("fight", %{"trigger" => ll}, socket) do
     IO.puts "called"
     game = Game.fight(socket.assigns[:game], ll)
@@ -44,8 +53,8 @@ defmodule JiviWeb.GamesChannel do
     #socket = assign(socket, :game, game)
     {:noreply, socket}
   end
-  
-  intercept ["fight", "challenge"]
+
+  intercept ["fight", "challenge", "player"]
   def handle_out("fight", payload, socket) do
     game = payload["game"]
     socket = assign(socket, :game, game)
@@ -59,7 +68,12 @@ defmodule JiviWeb.GamesChannel do
     broadcast socket, "render_challenge", %{"game" => game}
     {:noreply, socket}
   end
-
+  def handle_out("player", game, socket) do
+    socket = assign(socket, :game, game)
+    Jivi.GameBackup.save(socket.assigns[:name], game)
+    broadcast socket, "put_player_name", %{"game" => game}
+    {:noreply, socket}
+  end
   # Add authorization logic here as required.
   defp authorized?(_payload) do
     true

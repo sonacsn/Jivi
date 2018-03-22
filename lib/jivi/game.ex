@@ -152,11 +152,30 @@ defmodule Jivi.Game do
 
   def new_players do
     {p1_jivis, p2_jivis} = initial_jivis()
-    p1_jivis = Enum.map(p1_jivis, fn(j) -> Map.put(j, :owner, "P1") end)
-    p2_jivis = Enum.map(p2_jivis, fn(j) -> Map.put(j, :owner, "P2") end)
-    player1 = %{name: "P1", turn: true, jivis: p1_jivis }
-    player2 = %{name: "P2", turn: false, jivis: p2_jivis}
+    #p1_jivis = Enum.map(p1_jivis, fn(j) -> Map.put(j, :owner, "P1") end)
+    #p2_jivis = Enum.map(p2_jivis, fn(j) -> Map.put(j, :owner, "P2") end)
+    player1 = %{turn: true, jivis: p1_jivis}
+    player2 = %{turn: false, jivis: p2_jivis}
     { player1, player2 }
+  end
+
+  def put_jivi_owner(jivis, name) do
+    IO.inspect "in put jivi owner"
+    Enum.map(jivis, fn(j) -> Map.put(j, :owner, name) end)
+  end
+
+  def put_player(game, name) do
+    cond do
+      !Map.has_key?(game.player1, :name) ->
+        player1 = Map.put(game.player1, :name, name)
+        |>Map.put(:jivis, put_jivi_owner(game.player1.jivis, name))
+        Map.put(game, :player1, player1)
+      !Map.has_key?(game.player2, :name) && game.player1.name != name->
+        player2 = Map.put(game.player2, :name, name)
+        |> Map.put(:jivis, put_jivi_owner(game.player2.jivis, name))
+        Map.put(game, :player2, player2)
+      true -> game
+    end
   end
 
   ## Accept a list of jivis
@@ -180,7 +199,6 @@ defmodule Jivi.Game do
   ## Accepts the game state and trigger which is the challenge type
   ## Returns a game state where selected Jivis are removed from player list and are placed in field
   def fight(game, _trigger) do
-   
     ## If Player 1 has triggered fight
     if(_trigger == 1) do
       player1_jivi = return_selected_jivi(game.player1.jivis)

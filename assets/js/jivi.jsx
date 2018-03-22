@@ -21,19 +21,26 @@ class JiviGame extends React.Component {
  
     this.channel.join()
         .receive("ok", resp => { this.current_player = resp.player;
-				this.gotView(resp);})
+				 this.putPlayerName(this.current_player);
+				 this.gotView(resp);
+				})
         .receive("error", resp => { console.log("Unable to join", resp) });
 
     this.channel.on("render_challenge", resp => this.gotView(resp));  
 	 
     this.channel.on("render_fight", resp => this.gotView(resp));  
 
+    this.channel.on("put_player_name", resp => console.log("listener", resp));
   }
-
 
   gotView(view) {
     console.log("New view", view);
     this.setState(view.game);
+  }
+
+  putPlayerName(name) {
+         this.channel.push("player", { name: name })
+         .receive("ok", this.gotView.bind(this));
   }
 
   fight(trigger) {
