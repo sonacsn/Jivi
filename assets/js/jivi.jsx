@@ -116,7 +116,6 @@ class JiviGame extends React.Component {
          </div>
         </div>
        </div>
-       <img src="/images/pikachu.jpeg" alt="Image not displayed" width="42" height="42"/>
       </div>
     );
   }
@@ -141,7 +140,8 @@ function Jivi(params) {
                 <p> Fire    : {jivi.fire} </p>
                 <p> Water   : {jivi.water} </p>
 		<p> Electric: {jivi.electricity} </p>
-		<p> Muscle  : {jivi.muscle} </p> 
+		<p> Muscle  : {jivi.muscle} </p>
+                <img src={"/images/" + jivi.name} alt="Image not available" width="42" height="42"/> 
              </div>
           </div>);
   }
@@ -152,6 +152,7 @@ function Jivi(params) {
                 <p> Water   : {jivi.water} </p>
 		<p> Electric: {jivi.electricity} </p>
 		<p> Muscle  : {jivi.muscle} </p> 
+                <img src={"/images/" + jivi.name} alt="Image not available" width="42" height="42"/> 
              </div>
           </div>);
 }
