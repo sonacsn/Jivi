@@ -89,7 +89,6 @@ class JiviGame extends React.Component {
 	player1 = "Other Player";
 	player2 = this.state.players[1];
     }
-    
     return (
       <div className="container">
        <div className="row">
@@ -119,7 +118,7 @@ class JiviGame extends React.Component {
       </div>
     );
   }
-}
+}    
 
 function Jivi(params) {
   let root = params.root;
@@ -141,18 +140,18 @@ function Jivi(params) {
                 <p> Water   : {jivi.water} </p>
 		<p> Electric: {jivi.electricity} </p>
 		<p> Muscle  : {jivi.muscle} </p>
-                <img src={"/images/" + jivi.name} alt="Image not available" width="42" height="42"/> 
              </div>
+                <img src={"/images/" + jivi.name} alt="Image not available" width="60" height="60"/> 
           </div>);
   }
   return (<div className="col-md">
+                <div><img src={"/images/" + jivi.name} alt="Image not available" width="60" height="60"/></div> 
              <div className="jivi-front" onClick={() => root.select(jivi, player)}>
                 <p> Jivi    : {jivi.name} </p>
                 <p> Fire    : {jivi.fire} </p>
                 <p> Water   : {jivi.water} </p>
 		<p> Electric: {jivi.electricity} </p>
 		<p> Muscle  : {jivi.muscle} </p> 
-                <img src={"/images/" + jivi.name} alt="Image not available" width="42" height="42"/> 
              </div>
           </div>);
 }
