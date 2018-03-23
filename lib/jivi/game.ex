@@ -5,7 +5,8 @@ defmodule Jivi.Game do
       player1: p1,
       players: [],
       player2: p2,
-      field: []
+      field: [],
+      challenged: 0
     }
   end
 
@@ -14,18 +15,19 @@ defmodule Jivi.Game do
       player1: game.player1,
       player2: game.player2,
       field: game.field,
-      players: game.players
+      players: game.players,
+      challenged: 0
     }
   end
 
   def initial_jivis do
     jivis = [
-      %{name: "Pikachu", fire: 100, water: 30, electricity: 500, muscle: 80, selected: false, played: 0},
-      %{name: "Jigglypuff", fire: 30, water: 100, electricity: 30, muscle: 20, selected: false, played: 0},
-      %{name: "Squirtle", fire: 80, water: 50, electricity: 50, muscle: 60, selected: false, played: 0},
-      %{name: "Charizard", fire: 500, water: 20, electricity: 100, muscle: 100, selected: false, played: 0},
-      %{name: "Snorlax", fire: 20, water: 500, electricity: 20, muscle: 500, selected: false, played: 0},
-      %{name: "Charmander", fire: 200, water: 60, electricity: 80, muscle: 40, selected: false, played: 0},
+      %{name: "Pikachu", fire: 100, water: 30, electricity: 500, muscle: 80, selected: false},
+      %{name: "Jigglypuff", fire: 30, water: 100, electricity: 30, muscle: 20, selected: false},
+      %{name: "Squirtle", fire: 80, water: 50, electricity: 50, muscle: 60, selected: false},
+      %{name: "Charizard", fire: 500, water: 20, electricity: 100, muscle: 100, selected: false},
+      %{name: "Snorlax", fire: 20, water: 500, electricity: 20, muscle: 500, selected: false},
+      %{name: "Charmander", fire: 200, water: 60, electricity: 80, muscle: 40, selected: false},
     ]
     Enum.shuffle(jivis) |> Enum.split(3)
   end
@@ -46,8 +48,13 @@ defmodule Jivi.Game do
 
   end
 
+  def challenged(game, category) do
+    Map.put(game, :challenged, 1) 
+  end
+
   def challenge(game, category) when category == "fire" do
     IO.inspect "FIRE CHALLENGE"
+    game = Map.put(game, :challenged, 0)
     [jivi1, jivi2] = game.field
     jivi1 = Map.put(jivi1, :selected, false)
     jivi2 = Map.put(jivi2, :selected, false)
@@ -81,6 +88,7 @@ defmodule Jivi.Game do
 
   def challenge(game, category) when category == "water" do
     IO.inspect "WATER CHALLENGE"
+    game = Map.put(game, :challenged, 0)
     [jivi1, jivi2] = game.field
     jivi1 = Map.put(jivi1, :selected, false)
     jivi2 = Map.put(jivi2, :selected, false)
@@ -114,6 +122,7 @@ defmodule Jivi.Game do
 
   def challenge(game, category) when category == "electricity" do
     IO.inspect "ELECTRICITY CHALLENGE"
+    game = Map.put(game, :challenged, 0)
     [jivi1, jivi2] = game.field
     jivi1 = Map.put(jivi1, :selected, false)
     jivi2 = Map.put(jivi2, :selected, false)
@@ -147,6 +156,7 @@ defmodule Jivi.Game do
 
   def challenge(game, category) when category == "muscle" do
     IO.inspect "MUSCLE CHALLENGE"
+    game = Map.put(game, :challenged, 0)
     [jivi1, jivi2] = game.field
     jivi1 = Map.put(jivi1, :selected, false)
     jivi2 = Map.put(jivi2, :selected, false)
