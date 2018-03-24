@@ -33,6 +33,8 @@ class JiviGame extends React.Component {
     this.channel.on("render_fight", resp => this.gotView(resp));  
 
     this.channel.on("put_player_name", resp => this.gotView(resp));
+  
+    this.channel.on("push_select", resp => this.gotView(resp));
   }
 
   gotView(view) {
@@ -79,7 +81,7 @@ class JiviGame extends React.Component {
     let player1, player2 = ""
     console.log(this.state.players);
     console.log(this.current_player);
-
+    
     if(this.state.player1==null){ player1_jivis=""; }
     if(this.state.player1 != null) {
       player1_jivis = _.map(this.state.player1.jivis, (jivi) => {
@@ -114,19 +116,19 @@ class JiviGame extends React.Component {
          <div className="player">
 	  <h3><p>{player1}</p></h3>
           { player1_jivis }
-          <ButtonFun1 root={this}/>
+	 <ButtonFun1 root={this} player={this.state.player1} />
          </div>
         </div>
         <div className="col-md-6">
           <div className="field">
-	    <Field root={this}/>
+	    <Field root={this} />
           </div>
         </div>
         <div className="col-md-3">
          <div className="player">
 	  <h3><p>{player2}</p></h3>
           { player2_jivis }
-          <ButtonFun2 root={this}/>
+          <ButtonFun1 root={this} player={this.state.player2}/>
          </div>
         </div>
        </div>
@@ -143,54 +145,42 @@ function Jivi(params) {
   if(state.player1==null) {
     return (<div><p>Loading---</p></div>);
   }
- // if(player.name!=root.current_player){
-   // console.log(player.name);
-    //return (<div className="col-md"><div className="jivi-selected"></div></div>);
- // }
-  if(jivi.selected) {
+
+  if(player.name!=root.current_player){
+    return (<div className="col-md"><div className="jivi-selected"></div></div>);
+  }
+  let classname = "jivi-front";
+  if(jivi.selected)
+        classname = "jivi-selected";
+  console.log("selected?", jivi);
+
   return (<div className="col-md">
-             <div className="jivi-selected" onClick={() => root.select(jivi, player)}>
+             <div><img src={"/images/" + jivi.name} alt="Image not available" width="60" height="60"/></div>
+             <div className={classname} onClick={() => root.select(jivi, player)}>
                 <p> Jivi    : {jivi.name} </p>
                 <p> Fire    : {jivi.fire} </p>
                 <p> Water   : {jivi.water} </p>
 		<p> Electric: {jivi.electricity} </p>
 		<p> Muscle  : {jivi.muscle} </p>
              </div>
-                <img src={"/images/" + jivi.name} alt="Image not available" width="60" height="60"/> 
-          </div>);
-  }
-  return (<div className="col-md">
-                <div><img src={"/images/" + jivi.name} alt="Image not available" width="60" height="60"/></div> 
-             <div className="jivi-front" onClick={() => root.select(jivi, player)}>
-                <p> Jivi    : {jivi.name} </p>
-                <p> Fire    : {jivi.fire} </p>
-                <p> Water   : {jivi.water} </p>
-		<p> Electric: {jivi.electricity} </p>
-		<p> Muscle  : {jivi.muscle} </p> 
-             </div>
           </div>);
 }
 
 function ButtonFun1(params) {
+  let root = params.root;
   let state = params.root.state;
-  if(state.player1 != null) {
-    if((state.player1.turn == false && state.player2.ready == 2) || state.player1.turn == true) {
-      if(state.player1.ready == 1) {
-	return (<button type="button" onClick={() => params.root.fight(1)}>Ready</button>)
-      }
-    }
+  let player = params.player;
+ 
+  if(player == null || player.name != params.root.current_player){
+	return (<div></div>)
   }
-  return <div> </div>
-}
+  //if any jivis of player is selected 
+  let jivi = _.where(player.jivis, {selected: true});
 
-function ButtonFun2(params) {
-  let state = params.root.state;
-  if(state.player2 != null) {
-    if((state.player2.turn == false && state.player1.ready == 2) || state.player2.turn == true) {
-      if(state.player2.ready == 1) {
-	return (<button type="button" onClick={() => params.root.fight(2)}>Ready</button>)
-      }
-    }
+  //if any of player's jivi is in field
+  let in_field = _.where(state.field, {owner: player.name});
+  if(jivi.length != 0 && in_field.length == 0){
+	return (<button type="button" onClick={() => params.root.fight(player.name)}>Ready</button>)
   }
   return <div> </div>
 }
@@ -291,12 +281,34 @@ function Field(params){
           });
     }
   if(field_jivis!=""){
-    return (<div> {field_jivis}
-		<p><button type="button" className="btn btn-warning" onClick={() => params.root.challengeAccepted("fire")}>Fire</button>
-               <button type="button" className="btn btn-info" onClick={() => params.root.challengeAccepted("water")}>Water</button>
-               <button type="button" className="btn btn-danger" onClick={() => params.root.challengeAccepted("electricity")}>Electricity</button>
-               <button type="button" className="btn btn-dark" onClick={() => params.root.challengeAccepted("muscle")}>Muscle</button></p></div>);
+    return (<div> 
+		{field_jivis}
+		<ChallengeButtons root={params.root} player={params.root.current_player} />
+            </div>);
   }
   else{return(<div></div>);}
+}
+
+function ChallengeButtons(params){
+  let root = params.root;
+  let state = root.state;
+  let cur_playername = root.current_player;;
+  let player = "";
+  if(!_.contains(state.players, cur_playername))
+	return (<div></div>);
+  if(cur_playername == state.player1.name)
+	player = state.player1;
+  else
+	player = state.player2;
+  if(player.turn && state.field.length==2 && state.challenged==0){
+    return(<div>
+ 		<p><button type="button" className="btn btn-warning" onClick={() => params.root.challenge("fire")}>Fire</button>
+                   <button type="button" className="btn btn-info" onClick={() => params.root.challenge("water")}>Water</button>
+                   <button type="button" className="btn btn-danger" onClick={() => params.root.challenge("electricity")}>Electricity</button>
+                   <button type="button" className="btn btn-dark" onClick={() => params.root.challenge("muscle")}>Muscle</button></p>
+	  </div>);
+  }
+  else
+    return (<div></div>);
 }
 

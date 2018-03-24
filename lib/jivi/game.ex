@@ -45,7 +45,17 @@ defmodule Jivi.Game do
        player1 = Map.put(game.player1, :turn, true)
        Map.put(game, :player1, player1)
     end
+  end
 
+  def end_game(game) do
+    cond do
+      length(game.player1.jivis) == 0  ->
+        Map.put(game, :challenged, 2)
+      length(game.player2.jivis) == 0 ->
+        Map.put(game, :challenged, 2)
+      true ->
+        game
+    end
   end
 
   def showjivi(game, category) do
@@ -111,14 +121,14 @@ defmodule Jivi.Game do
     end
 
     game = change_turn(game)
-    
+
     p = Map.put(game.player1, :ready, 0)
     game = Map.put(game, :player1, p)
 
     p = Map.put(game.player2, :ready, 0)
     game = Map.put(game, :player2, p)
 
-    Map.put(game, :field, [])
+    Map.put(game, :field, [])|> end_game
   end
 
   def select(game, jivi, player) do
@@ -126,8 +136,9 @@ defmodule Jivi.Game do
       jivis = game.player1.jivis
       |> Enum.map(fn(j) -> if j.name==jivi["name"], do:  %{j | selected: true}, else: %{j | selected: false}
       end)
+      IO.inspect "jivis"
+      IO.inspect jivis
       p = Map.put(game.player1, :jivis, jivis)
-      p = Map.put(p, :ready, 1)
       Map.put(game, :player1, p)
     else
       jivis = game.player2.jivis
@@ -187,9 +198,9 @@ defmodule Jivi.Game do
 
   ## Accepts the game state and trigger which is the challenge type
   ## Returns a game state where selected Jivis are removed from player list and are placed in field
-  def fight(game, _trigger) do
+  def fight(game, player_name) do
     ## If Player 1 has triggered fight
-    if(_trigger == 1) do
+    if(player_name == game.player1.name) do
       player1_jivi = return_selected_jivi(game.player1.jivis)
       game = Map.put(game, :field, game.field ++ [player1_jivi])
 

@@ -25,9 +25,11 @@ defmodule JiviWeb.GamesChannel do
 
   def handle_in("select", %{"jivi" => ll, "player" => ll2}, socket) do
     game = Game.select(socket.assigns[:game], ll, ll2)
-    Jivi.GameBackup.save(socket.assigns[:name], game)
-    socket = assign(socket, :game, game)
-    {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
+#    Jivi.GameBackup.save(socket.assigns[:name], game)
+#    socket = assign(socket, :game, game)
+#    {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
+     broadcast socket, "select", game
+     {:noreply, socket}
   end
   def handle_in("player", %{"name" => ll}, socket) do
     game = Game.put_player(socket.assigns[:game], ll)
@@ -62,7 +64,7 @@ defmodule JiviWeb.GamesChannel do
     {:noreply, socket}
   end
 
-  intercept ["fight", "challenge", "player", "showjivi"]
+  intercept ["fight", "select","challenge", "player", "showjivi"]
   def handle_out("fight", payload, socket) do
     game = payload["game"]
     socket = assign(socket, :game, game)
@@ -88,6 +90,12 @@ defmodule JiviWeb.GamesChannel do
     socket = assign(socket, :game, game)
     Jivi.GameBackup.save(socket.assigns[:name], game)
     broadcast socket, "put_player_name", %{"game" => game}
+    {:noreply, socket}
+  end
+  def handle_out("select", game, socket) do
+    socket = assign(socket, :game, game)
+    Jivi.GameBackup.save(socket.assigns[:name], game)
+    broadcast socket, "push_select", %{"game" => game}
     {:noreply, socket}
   end
   # Add authorization logic here as required.
