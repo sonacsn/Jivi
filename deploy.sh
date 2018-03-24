@@ -1,0 +1,43 @@
+#!/bin/bash
+
+export PORT=5104
+export MIX_ENV=prod
+export GIT_PATH=/home/jivi/src/jivi 
+
+PWD=`pwd`
+if [ $PWD != $GIT_PATH ]; then
+	echo "Error: Must check out git repo to $GIT_PATH"
+	echo "  Current directory is $PWD"
+	exit 1
+fi
+
+if [ $USER != "jivi" ]; then
+	echo "Error: must run as user 'jivi'"
+	echo "  Current user is $USER"
+	exit 2
+fi
+
+mix deps.get
+(cd assets && npm install)
+(cd assets && ./node_modules/brunch/bin/brunch b -p)
+mix phx.digest
+mix release --env=prod
+
+mkdir -p ~/www
+mkdir -p ~/old
+
+NOW=`date +%s`
+if [ -d ~/www/jivi ]; then
+	echo mv ~/www/jivi ~/old/$NOW
+	mv ~/www/jivi ~/old/$NOW
+fi
+
+mkdir -p ~/www/jivi
+REL_TAR=~/src/jivi/_build/prod/rel/jivi/releases/0.0.1/jivi.tar.gz
+(cd ~/www/jivi && tar xzvf $REL_TAR)
+
+crontab - <<CRONTAB
+@reboot bash /home/jivi/src/jivi/start.sh
+CRONTAB
+
+#. start.sh

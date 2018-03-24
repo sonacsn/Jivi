@@ -6,6 +6,7 @@ defmodule Jivi.Game do
       players: [],
       player2: p2,
       field: [],
+      killed: [],
       challenged: 0
     }
   end
@@ -15,6 +16,7 @@ defmodule Jivi.Game do
       player1: game.player1,
       player2: game.player2,
       field: game.field,
+      killed: game.killed,
       players: game.players,
       challenged: 0
     }
@@ -22,12 +24,12 @@ defmodule Jivi.Game do
 
   def initial_jivis do
     jivis = [
-      %{name: "Pikachu", fire: 100, water: 30, electricity: 500, muscle: 80, selected: false},
-      %{name: "Jigglypuff", fire: 30, water: 100, electricity: 30, muscle: 20, selected: false},
-      %{name: "Squirtle", fire: 80, water: 50, electricity: 50, muscle: 60, selected: false},
-      %{name: "Charizard", fire: 500, water: 20, electricity: 100, muscle: 100, selected: false},
-      %{name: "Snorlax", fire: 20, water: 500, electricity: 20, muscle: 500, selected: false},
-      %{name: "Charmander", fire: 200, water: 60, electricity: 80, muscle: 40, selected: false},
+      %{name: "Pikachu", fire: 60, water: 66, electricity: 72, muscle: 78, selected: false},
+      %{name: "Jigglypuff", fire: 66, water: 72, electricity: 78, muscle: 84, selected: false},
+      %{name: "Squirtle", fire: 72, water: 78, electricity: 84, muscle: 90, selected: false},
+      %{name: "Charizard", fire: 78, water: 84, electricity: 90, muscle: 60, selected: false},
+      %{name: "Snorlax", fire: 84, water: 90, electricity: 60, muscle: 66, selected: false},
+      %{name: "Charmander", fire: 90, water: 60, electricity: 66, muscle: 72, selected: false},
     ]
     Enum.shuffle(jivis) |> Enum.split(3)
   end
@@ -65,37 +67,53 @@ defmodule Jivi.Game do
   def decide_winner(jivi1, jivi2, category) when category == "fire" do
     IO.inspect "FIRE CHALLENGE"
     if(jivi1.fire > jivi2.fire) do
-       true
+       {jivi1, jivi2}
     else
-       false
+       {jivi2, jivi1}
     end
   end
 
   def decide_winner(jivi1, jivi2, category) when category == "water" do
     IO.inspect "WATER CHALLENGE"
     if(jivi1.water > jivi2.water) do
-       true
+       {jivi1, jivi2}
     else
-       false
+       {jivi2, jivi1}
     end
   end
 
   def decide_winner(jivi1, jivi2, category) when category == "electricity" do
     IO.inspect "ELECTRICITY CHALLENGE"
     if(jivi1.electricity > jivi2.electricity) do
-       true
+       {jivi1, jivi2}
     else
-       false
+       {jivi2, jivi1}
     end
   end
 
   def decide_winner(jivi1, jivi2, category) when category == "muscle" do
     IO.inspect "MUSCLE CHALLENGE"
     if(jivi1.muscle > jivi2.muscle) do
-       true
+       {jivi1, jivi2}
     else
-       false
+       {jivi2, jivi1}
     end
+  end
+
+  def decrease_power(jivi, category) when category == "fire" do
+    Map.put(jivi, :fire, jivi.fire - 10)
+  end
+
+  def decrease_power(jivi, category) when category == "water" do
+    Map.put(jivi, :water, jivi.water - 10)
+  end
+
+  def decrease_power(jivi, category) when category == "electricity" do
+    Map.put(jivi, :electricity, jivi.electricity - 10)
+  end
+
+  def decrease_power(jivi, category) when category == "muscle" do
+    Map.put(jivi, :muscle, jivi.muscle - 10)
   end
 
   def challenge(game, category) do
@@ -103,19 +121,15 @@ defmodule Jivi.Game do
     [jivi1, jivi2] = game.field
     jivi1 = Map.put(jivi1, :selected, false)
     jivi2 = Map.put(jivi2, :selected, false)
-    winner = if (decide_winner(jivi1, jivi2, category)) do
-      jivi2 = Map.put(jivi2, :owner, jivi1.owner)
-      jivi1.owner
-    else
-      jivi1 = Map.put(jivi1, :owner, jivi2.owner)
-      jivi2.owner
-    end
-    game = if winner == game.player1.name do
-      p_jivis = game.player1.jivis ++ [jivi1, jivi2]
+    {winner_jivi, loser_jivi} = decide_winner(jivi1, jivi2, category)
+    winner_jivi = decrease_power(winner_jivi, category)
+
+    game = if winner_jivi.owner == game.player1.name do
+      p_jivis = game.player1.jivis ++ [winner_jivi]
       player1 = Map.put(game.player1, :jivis, p_jivis)
       Map.put(game, :player1, player1)
     else
-      p_jivis = game.player2.jivis ++ [jivi1, jivi2]
+      p_jivis = game.player2.jivis ++ [winner_jivi]
       player2 = Map.put(game.player2, :jivis, p_jivis)
       Map.put(game, :player2, player2)
     end
@@ -127,6 +141,8 @@ defmodule Jivi.Game do
 
     p = Map.put(game.player2, :ready, 0)
     game = Map.put(game, :player2, p)
+
+    game = Map.put(game, :killed, game.killed ++ [loser_jivi])
 
     Map.put(game, :field, [])|> end_game
   end

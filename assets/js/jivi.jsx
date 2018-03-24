@@ -16,6 +16,7 @@ class JiviGame extends React.Component {
                 player2: null,
 		players: null,
 		field: null,
+		killed: null,
                 challenged: 0
                };
     this.current_player = "";
@@ -71,13 +72,14 @@ class JiviGame extends React.Component {
     this.showjivi(category)
     setTimeout(() => {
 	this.challenge(category)
-    }, 2000);
+    }, 4000);
   }
 
   render() {
     let player1_jivis = "";
     let player2_jivis = "";  
     let field_jivis = "";
+    let killed_jivis = "";
     let player1, player2 = ""
     console.log(this.state.players);
     console.log(this.current_player);
@@ -96,6 +98,11 @@ class JiviGame extends React.Component {
     if(this.state.field != null) {
       field_jivis = _.map(this.state.field, (jivi) => {
         return <Jivi jivi={jivi} root={this} />;
+          });
+    }
+    if(this.state.killed != null) {
+      killed_jivis = _.map(this.state.killed, (jivi) => {
+        return <p><img src={"/images/" + jivi.name} alt="Image not available" width="60" height="60"/></p>;
           });
     }
     if(this.state.players != null && this.current_player == this.state.players[0]){
@@ -123,6 +130,9 @@ class JiviGame extends React.Component {
           <div className="field">
 	    <Field root={this} />
           </div>
+          <div className="killed">
+            {killed_jivis}
+	  </div>
         </div>
         <div className="col-md-3">
          <div className="player">
@@ -152,7 +162,6 @@ function Jivi(params) {
   let classname = "jivi-front";
   if(jivi.selected)
         classname = "jivi-selected";
-  console.log("selected?", jivi);
 
   return (<div className="col-md">
              <div><img src={"/images/" + jivi.name} alt="Image not available" width="60" height="60"/></div>
@@ -289,6 +298,17 @@ function Field(params){
   else{return(<div></div>);}
 }
 
+function Killed(params){
+  let state = params.root.state;
+  let killed_jivis = "";
+  if(state.killed != null) {
+      killed_jivis = _.map(state.killed, (jivi) => {
+              return <ShowFieldJivi root={params.root} jivi={jivi}/>
+          });
+    }
+  return(<div></div>)
+}
+
 function ChallengeButtons(params){
   let root = params.root;
   let state = root.state;
@@ -302,10 +322,10 @@ function ChallengeButtons(params){
 	player = state.player2;
   if(player.turn && state.field.length==2 && state.challenged==0){
     return(<div>
- 		<p><button type="button" className="btn btn-warning" onClick={() => params.root.challenge("fire")}>Fire</button>
-                   <button type="button" className="btn btn-info" onClick={() => params.root.challenge("water")}>Water</button>
-                   <button type="button" className="btn btn-danger" onClick={() => params.root.challenge("electricity")}>Electricity</button>
-                   <button type="button" className="btn btn-dark" onClick={() => params.root.challenge("muscle")}>Muscle</button></p>
+ 		<p><button type="button" className="btn btn-warning" onClick={() => params.root.challengeAccepted("fire")}>Fire</button>
+                   <button type="button" className="btn btn-info" onClick={() => params.root.challengeAccepted("water")}>Water</button>
+                   <button type="button" className="btn btn-danger" onClick={() => params.root.challengeAccepted("electricity")}>Electricity</button>
+                   <button type="button" className="btn btn-dark" onClick={() => params.root.challengeAccepted("muscle")}>Muscle</button></p>
 	  </div>);
   }
   else
