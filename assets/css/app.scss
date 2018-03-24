@@ -1,19 +1,18 @@
 /* This file is for your main application css. */
 @import "bootstrap";
 
-.side {
-	padding: 4ex;
+.containter {
 	text-align: center;
 }
 
 h1 {
 	text-align: center;
-	background-color: orange;
+	background-color: turquoise;
 }
 
 h3 {
 	text-align: center;
-	background-color: pink;
+	font-family: sans-serif;
 }
 
 row {
@@ -21,8 +20,6 @@ row {
 }
 
 .col-md {
-	background-color: palegoldenrod;
-	border-style: solid;
 	padding: 5px;
 }
 
@@ -37,9 +34,9 @@ row {
 }
 
 .field {
-        background-color: green;
-	width: 400px;
-        height: 600px;
+        background-color: lightgreen;
+	width: 100%;
+        height: 90%;
         margin: auto;
         padding: 5px;
         text-align: center;
@@ -49,26 +46,27 @@ row {
 	vertical-align: middle;
 }
 
-.killed {
-        background-color: yellow;
+.flex-container {
+        background-color: crimson;
 	width: 400px;
-        height: 400px;
         margin: auto;
         padding: 5px;
         text-align: center;
         font-size: 90%;
-	border: 3px solid black;
+	display: flex;
+}
+
+.killed {
+	border: 2px solid black;
 }
 
 .player {
-        background-color: yellow;
 	width: 400px;
         height: 400px;
         margin: auto;
         padding: 5px;
         text-align: center;
         font-size: 90%;
-	border: 3px solid black;
 	display: table-cell;
 	vertical-align: middle;
 }
@@ -76,8 +74,20 @@ row {
 
 .jivi-front {
         background-color: palegoldenrod;
-        width: 70%;
-        height: 200px;
+        width: 100%;
+        height: 100%;
+        margin: auto;
+        padding: 5px;
+        text-align: center;
+        font-size: 90%;
+	display: inline-block;
+	cursor: pointer;
+}
+
+.jivi-selected {
+        background-color: orange;
+        width: 100%;
+        height: 100%;
         margin: auto;
         padding: 5px;
         text-align: center;
@@ -85,13 +95,20 @@ row {
 	display: inline-block;
 }
 
-.jivi-selected {
-        background-color: orange;
+.onfield {
+        background-color: #1f61fF;
         width: 70%;
         height: 200px;
         margin: auto;
         padding: 5px;
         text-align: center;
         font-size: 90%;
-	display: inline-block;
+        display: inline-block;
+}
+
+
+.message {
+	text-align: center;
+	font-family: cursive;
+        color: red;
 }

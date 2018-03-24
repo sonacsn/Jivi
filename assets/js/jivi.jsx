@@ -20,16 +20,18 @@ class JiviGame extends React.Component {
                 challenged: 0
                };
     this.current_player = "";
- 
+    this.category = "";
     this.channel.join()
         .receive("ok", resp => { this.current_player = resp.player;
 				 this.putPlayerName(this.current_player);
 				})
         .receive("error", resp => { console.log("Unable to join", resp) });
 
-    this.channel.on("render_showjivi", resp => this.gotView(resp));  
+    this.channel.on("render_showjivi", resp => {this.category=resp.category;
+						this.gotView(resp)});  
 
-    this.channel.on("render_challenge", resp => this.gotView(resp));  
+    this.channel.on("render_challenge", resp => {this.category="";
+						 this.gotView(resp)});  
 	 
     this.channel.on("render_fight", resp => this.gotView(resp));  
 
@@ -39,7 +41,6 @@ class JiviGame extends React.Component {
   }
 
   gotView(view) {
-    console.log("New view", view);
     this.setState(view.game);
   }
 
@@ -69,8 +70,10 @@ class JiviGame extends React.Component {
   }
 
   challengeAccepted(category) {
+    this.category = category;
     this.showjivi(category)
     setTimeout(() => {
+        this.category = "";
 	this.challenge(category)
     }, 4000);
   }
@@ -81,43 +84,49 @@ class JiviGame extends React.Component {
     let field_jivis = "";
     let killed_jivis = "";
     let player1, player2 = ""
-    console.log(this.state.players);
-    console.log(this.current_player);
+    let isObserver = false;
     
-    if(this.state.player1==null){ player1_jivis=""; }
-    if(this.state.player1 != null) {
-      player1_jivis = _.map(this.state.player1.jivis, (jivi) => {
-        return <Jivi jivi={jivi} root={this} player={this.state.player1}/>;
+    if(this.state.player1==null || this.state.player2==null)
+	return (<div>Loading....</div>);
+
+      player1_jivis = _.map(this.state.player1.jivis, (jivi, key) => {
+        return <Jivi jivi={jivi} key={key}  root={this} player={this.state.player1}/>;
 	  });
-    }
-    if(this.state.player2 != null) {
-      player2_jivis = _.map(this.state.player2.jivis, (jivi) => {
-        return <Jivi jivi={jivi} root={this} player={this.state.player2}/>;
+
+      player2_jivis = _.map(this.state.player2.jivis, (jivi,key) => {
+        return <Jivi jivi={jivi} key={key} root={this} player={this.state.player2}/>;
           });
-    }
+
     if(this.state.field != null) {
-      field_jivis = _.map(this.state.field, (jivi) => {
-        return <Jivi jivi={jivi} root={this} />;
+      field_jivis = _.map(this.state.field, (jivi, key) => {
+        return <Jivi jivi={jivi} key={key} root={this} />;
           });
     }
     if(this.state.killed != null) {
-      killed_jivis = _.map(this.state.killed, (jivi) => {
-        return <p><img src={"/images/" + jivi.name} alt="Image not available" width="60" height="60"/></p>;
+      killed_jivis = _.map(this.state.killed, (jivi,key) => {
+        return <div key={key} className="killed"><img src={"/images/" + jivi.name} alt="Image not available" width="60" height="60"/></div>;
           });
     }
-    if(this.state.players != null && this.current_player == this.state.players[0]){
+    if(this.current_player == this.state.players[0]){
 	player1 = this.current_player;
 	player2 = "Other Player";
     }
-    else if(this.state.players != null && this.state.players.length > 1){
+    else if(this.state.players.length==2 && this.current_player==this.state.players[1]){
 	player1 = "Other Player";
 	player2 = this.state.players[1];
     }
+    else{
+        player1 = this.state.players[0];
+        player2 = this.state.players[1];
+        isObserver = true;
+    }
+    let msg = "";
+    if(isObserver)
+        msg = "Logged in as Observer";
+
     return (
-      <div className="container">
-       <div className="row">
-        <Message root={this}/>
-       </div>
+      <div className="container" max-width="100%">
+       <div className="message"><Message root={this}/></div>
        <div className="row">
         <div className="col-md-3">
          <div className="player">
@@ -128,9 +137,11 @@ class JiviGame extends React.Component {
         </div>
         <div className="col-md-6">
           <div className="field">
+            {msg}
 	    <Field root={this} />
           </div>
-          <div className="killed">
+          <h3>Killed Jivis</h3>
+          <div className="flex-container">
             {killed_jivis}
 	  </div>
         </div>
@@ -157,7 +168,7 @@ function Jivi(params) {
   }
 
   if(player.name!=root.current_player){
-    return (<div className="col-md"><div className="jivi-selected"></div></div>);
+    return (<div className="col-md"><img src={"/images/jiviball"} alt="Image not available" width="100%" height="200px"/></div>);
   }
   let classname = "jivi-front";
   if(jivi.selected)
@@ -165,7 +176,7 @@ function Jivi(params) {
 
   return (<div className="col-md">
              <div><img src={"/images/" + jivi.name} alt="Image not available" width="60" height="60"/></div>
-             <div className={classname} onClick={() => root.select(jivi, player)}>
+             <div className={classname} id="card" onClick={() => root.select(jivi, player)}>
                 <p> Jivi    : {jivi.name} </p>
                 <p> Fire    : {jivi.fire} </p>
                 <p> Water   : {jivi.water} </p>
@@ -188,61 +199,55 @@ function ButtonFun1(params) {
 
   //if any of player's jivi is in field
   let in_field = _.where(state.field, {owner: player.name});
-  if(jivi.length != 0 && in_field.length == 0){
-	return (<button type="button" onClick={() => params.root.fight(player.name)}>Ready</button>)
+  if(state.challenged!=2 && jivi.length != 0 && in_field.length == 0){
+	return (<button type="button" className="btn btn-secondaryt" onClick={() => params.root.fight(player.name)}>Ready</button>)
   }
   return <div> </div>
 }
 
 function Message(params) {
+  let root = params.root;
   let state = params.root.state;
-  if(state.player1 != null && state.player1.turn == true) {
-    return Message1(params)
-  } else if(state.player2 != null && state.player2.turn == true) {
-    return Message2(params)
-  } else {
-    return (<div> </div>)
-  } 
-}
+  let player = "";
+  if(root.current_player == state.player1.name)
+    player = state.player1;
+  else if(root.current_player == state.player2.name)
+    player = state.player2;
+  else
+    player = "observer";
+  let in_field = _.where(state.field, {owner: player.name});
 
-function Message1(params) {
-  let state = params.root.state;
-  if(state.player1 != null && state.player2 != null) {
-    if(state.player1.turn == true && state.player1.ready == 0) {
-      return (<h3> Waiting for Player1 to select Jivi </h3>)
-    } else if(state.player1.ready == 1) {
-      return (<h3> Waiting for Player 1 to Send Jivi to Field </h3>)
-    } else if(state.player1.ready == 2 && state.player2.ready == 0) {
-      return (<h3> Waiting for Player 2 to select Jivi </h3>)
-    } else if(state.player1.ready == 2 && state.player2.ready == 1) {
-      return (<h3> Waiting for Player 2 to Send Jivi to Field </h3>)
-    } else if(state.player1.ready == 2 && state.player2.ready == 2) {
-      return (<h3> Waiting to Challenge </h3>)
-    } else {
-      return (<h3> No message </h3>)   
+  if(player != "observer"){
+    if(root.state.challenged==2){
+      if(player.jivis.length!=0)
+        return(<h2>Congrats! You Won!</h2>);
+      else
+        return(<h2>You lost. Better luck next time</h2>);	
     }
-  }
-  return (<div> </div>)
-}
+    if(state.field.length==0 || (state.field.length==1 && in_field.length==0))
+      return (<div> Select and send your Jivi to fight</div>);
+    if(state.field.length==1 && in_field.length==1)
+      return (<div>Waiting for other player to send the Jivi </div>);
+    if(state.field.length==2 && state.challenged==0)
+      return (<div>Waiting for the challenge </div>);
+    if(root.category!="")
+      return(<div>Challenged on {root.category}!</div>);
+ }
 
-function Message2(params) {
-  let state = params.root.state;
-  if(state.player1 != null && state.player2 != null) {
-    if(state.player2.turn == true && state.player2.ready == 0) {
-      return (<h3> Waiting for Player2 to select Jivi </h3>)
-    } else if(state.player2.ready == 1) {
-      return (<h3> Waiting for Player 2 to Send Jivi to Field </h3>)
-    } else if(state.player2.ready == 2 && state.player1.ready == 0) {
-      return (<h3> Waiting for Player 1 to select Jivi </h3>)
-    } else if(state.player2.ready == 2 && state.player1.ready == 1) {
-      return (<h3> Waiting for Player 1 to Send Jivi to Field </h3>)
-    } else if(state.player2.ready == 2 && state.player1.ready == 2) {
-      return (<h3> Waiting to Challenge </h3>)
-    } else {
-      return (<h3> No message </h3>)   
-    }
-  }
-  return (<div> </div>)
+ if(state.challenged==2){
+   if(state.player1.jivis.length!=0)
+     return(<h2>{state.player1.name} won the game!</h2>);
+   else
+     return(<h2>{state.player2.name} won the game!</h2>);
+ }
+
+ if(state.field.length < 2)
+     return(<div>Waiting for both players to send their Jivis</div>);
+ if(state.field.length==2 && state.challenged==0)
+     return(<div>Waiting for the challenge</div>);
+ if(root.category!="")
+     return(<div>Challenged on {root.category}</div>);
+ return(<div></div>);
 }
 
 function FieldJivi(params) {
@@ -253,7 +258,7 @@ function FieldJivi(params) {
     return (<div><p>Loading---</p></div>);
   }
   return (<div className="col-md">
-             <div className="jivi-selected">
+             <div className="onfield">
              </div>
           </div>);
 }
@@ -281,11 +286,11 @@ function Field(params){
   let state = params.root.state;
   let field_jivis = "";
   if(state.field != null) {
-      field_jivis = _.map(state.field, (jivi) => {
+      field_jivis = _.map(state.field, (jivi,ii) => {
            if(state.challenged == 0) {
-              return <FieldJivi root={params.root} jivi={jivi}/>
+              return <FieldJivi key={ii} root={params.root} jivi={jivi}/>
            } else {
-              return <ShowFieldJivi root={params.root} jivi={jivi}/>
+              return <ShowFieldJivi key={ii} root={params.root} jivi={jivi}/>
            }
           });
     }
@@ -298,16 +303,6 @@ function Field(params){
   else{return(<div></div>);}
 }
 
-function Killed(params){
-  let state = params.root.state;
-  let killed_jivis = "";
-  if(state.killed != null) {
-      killed_jivis = _.map(state.killed, (jivi) => {
-              return <ShowFieldJivi root={params.root} jivi={jivi}/>
-          });
-    }
-  return(<div></div>)
-}
 
 function ChallengeButtons(params){
   let root = params.root;
