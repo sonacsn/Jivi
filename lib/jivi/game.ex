@@ -136,8 +136,6 @@ defmodule Jivi.Game do
       jivis = game.player1.jivis
       |> Enum.map(fn(j) -> if j.name==jivi["name"], do:  %{j | selected: true}, else: %{j | selected: false}
       end)
-      IO.inspect "jivis"
-      IO.inspect jivis
       p = Map.put(game.player1, :jivis, jivis)
       Map.put(game, :player1, p)
     else
