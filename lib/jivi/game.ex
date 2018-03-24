@@ -48,17 +48,52 @@ defmodule Jivi.Game do
 
   end
 
-  def challenged(game, category) do
+  def showjivi(game, category) do
     Map.put(game, :challenged, 1) 
   end
 
-  def challenge(game, category) when category == "fire" do
+  def decide_winner(jivi1, jivi2, category) when category == "fire" do
     IO.inspect "FIRE CHALLENGE"
+    if(jivi1.fire > jivi2.fire) do
+       true
+    else
+       false
+    end
+  end
+
+  def decide_winner(jivi1, jivi2, category) when category == "water" do
+    IO.inspect "WATER CHALLENGE"
+    if(jivi1.water > jivi2.water) do
+       true
+    else
+       false
+    end
+  end
+
+  def decide_winner(jivi1, jivi2, category) when category == "electricity" do
+    IO.inspect "ELECTRICITY CHALLENGE"
+    if(jivi1.electricity > jivi2.electricity) do
+       true
+    else
+       false
+    end
+  end
+
+  def decide_winner(jivi1, jivi2, category) when category == "muscle" do
+    IO.inspect "MUSCLE CHALLENGE"
+    if(jivi1.muscle > jivi2.muscle) do
+       true
+    else
+       false
+    end
+  end
+
+  def challenge(game, category) do
     game = Map.put(game, :challenged, 0)
     [jivi1, jivi2] = game.field
     jivi1 = Map.put(jivi1, :selected, false)
     jivi2 = Map.put(jivi2, :selected, false)
-    winner = if jivi1.fire > jivi2.fire do
+    winner = if (decide_winner(jivi1, jivi2, category)) do
       jivi2 = Map.put(jivi2, :owner, jivi1.owner)
       jivi1.owner
     else
@@ -77,108 +112,6 @@ defmodule Jivi.Game do
 
     game = change_turn(game)
     
-    p = Map.put(game.player1, :ready, 0)
-    game = Map.put(game, :player1, p)
-
-    p = Map.put(game.player2, :ready, 0)
-    game = Map.put(game, :player2, p)
-
-    Map.put(game, :field, [])
-  end
-
-  def challenge(game, category) when category == "water" do
-    IO.inspect "WATER CHALLENGE"
-    game = Map.put(game, :challenged, 0)
-    [jivi1, jivi2] = game.field
-    jivi1 = Map.put(jivi1, :selected, false)
-    jivi2 = Map.put(jivi2, :selected, false)
-    winner = if jivi1.water > jivi2.water do
-      jivi2 = Map.put(jivi2, :owner, jivi1.owner)
-      jivi1.owner
-    else
-      jivi1 = Map.put(jivi1, :owner, jivi2.owner)
-      jivi2.owner
-    end
-    game = if winner == game.player1.name do
-      p_jivis = game.player1.jivis ++ [jivi1, jivi2]
-      player1 = Map.put(game.player1, :jivis, p_jivis)
-      Map.put(game, :player1, player1)
-    else
-      p_jivis = game.player2.jivis ++ [jivi1, jivi2]
-      player2 = Map.put(game.player2, :jivis, p_jivis)
-      Map.put(game, :player2, player2)
-    end
-
-    game = change_turn(game)
-
-    p = Map.put(game.player1, :ready, 0)
-    game = Map.put(game, :player1, p)
-
-    p = Map.put(game.player2, :ready, 0)
-    game = Map.put(game, :player2, p)
-
-    Map.put(game, :field, [])
-  end
-
-  def challenge(game, category) when category == "electricity" do
-    IO.inspect "ELECTRICITY CHALLENGE"
-    game = Map.put(game, :challenged, 0)
-    [jivi1, jivi2] = game.field
-    jivi1 = Map.put(jivi1, :selected, false)
-    jivi2 = Map.put(jivi2, :selected, false)
-    winner = if jivi1.electricity > jivi2.electricity do
-      jivi2 = Map.put(jivi2, :owner, jivi1.owner)
-      jivi1.owner
-    else
-      jivi1 = Map.put(jivi1, :owner, jivi2.owner)
-      jivi2.owner
-    end
-    game = if winner == game.player1.name do
-      p_jivis = game.player1.jivis ++ [jivi1, jivi2]
-      player1 = Map.put(game.player1, :jivis, p_jivis)
-      Map.put(game, :player1, player1)
-    else
-      p_jivis = game.player2.jivis ++ [jivi1, jivi2]
-      player2 = Map.put(game.player2, :jivis, p_jivis)
-      Map.put(game, :player2, player2)
-    end
-
-    game = change_turn(game)
-
-    p = Map.put(game.player1, :ready, 0)
-    game = Map.put(game, :player1, p)
-
-    p = Map.put(game.player2, :ready, 0)
-    game = Map.put(game, :player2, p)
-
-    Map.put(game, :field, [])
-  end
-
-  def challenge(game, category) when category == "muscle" do
-    IO.inspect "MUSCLE CHALLENGE"
-    game = Map.put(game, :challenged, 0)
-    [jivi1, jivi2] = game.field
-    jivi1 = Map.put(jivi1, :selected, false)
-    jivi2 = Map.put(jivi2, :selected, false)
-    winner = if jivi1.muscle > jivi2.muscle do
-      jivi2 = Map.put(jivi2, :owner, jivi1.owner)
-      jivi1.owner
-    else
-      jivi1 = Map.put(jivi1, :owner, jivi2.owner)
-      jivi2.owner
-    end
-    game = if winner == game.player1.name do
-      p_jivis = game.player1.jivis ++ [jivi1, jivi2]
-      player1 = Map.put(game.player1, :jivis, p_jivis)
-      Map.put(game, :player1, player1)
-    else
-      p_jivis = game.player2.jivis ++ [jivi1, jivi2]
-      player2 = Map.put(game.player2, :jivis, p_jivis)
-      Map.put(game, :player2, player2)
-    end
-
-    game = change_turn(game)
-
     p = Map.put(game.player1, :ready, 0)
     game = Map.put(game, :player1, p)
 

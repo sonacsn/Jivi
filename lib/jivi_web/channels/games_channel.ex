@@ -54,15 +54,15 @@ defmodule JiviWeb.GamesChannel do
     {:noreply, socket}
   end
 
-  def handle_in("challenged", %{"category" => ll}, socket) do
-    game = Game.challenged(socket.assigns[:game], ll)
+  def handle_in("showjivi", %{"category" => ll}, socket) do
+    game = Game.showjivi(socket.assigns[:game], ll)
     #Jivi.GameBackup.save(socket.assigns[:name], game)
-    broadcast socket, "challenged", %{"game" => game}
+    broadcast socket, "showjivi", %{"game" => game}
     #socket = assign(socket, :game, game)
     {:noreply, socket}
   end
 
-  intercept ["fight", "challenge", "player", "challenged"]
+  intercept ["fight", "challenge", "player", "showjivi"]
   def handle_out("fight", payload, socket) do
     game = payload["game"]
     socket = assign(socket, :game, game)
@@ -77,10 +77,10 @@ defmodule JiviWeb.GamesChannel do
     {:noreply, socket}
   end
   
-  def handle_out("challenged", %{"game" => game}, socket) do
+  def handle_out("showjivi", %{"game" => game}, socket) do
     socket = assign(socket, :game, game)
     Jivi.GameBackup.save(socket.assigns[:name], game)
-    broadcast socket, "render_challenged", %{"game" => game}
+    broadcast socket, "render_showjivi", %{"game" => game}
     {:noreply, socket}
   end
 

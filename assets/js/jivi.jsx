@@ -26,7 +26,7 @@ class JiviGame extends React.Component {
 				})
         .receive("error", resp => { console.log("Unable to join", resp) });
 
-    this.channel.on("render_challenged", resp => this.gotView(resp));  
+    this.channel.on("render_showjivi", resp => this.gotView(resp));  
 
     this.channel.on("render_challenge", resp => this.gotView(resp));  
 	 
@@ -55,8 +55,8 @@ class JiviGame extends React.Component {
 	.receive("ok", this.gotView.bind(this));
   }
  
-  challenged(category) {
-    this.channel.push("challenged", { category: category })
+  showjivi(category) {
+    this.channel.push("showjivi", { category: category })
 	.receive("ok", this.gotView.bind(this));
   }
 
@@ -66,7 +66,7 @@ class JiviGame extends React.Component {
   }
 
   challengeAccepted(category) {
-    this.challenged(category)
+    this.showjivi(category)
     setTimeout(() => {
 	this.challenge(category)
     }, 2000);
