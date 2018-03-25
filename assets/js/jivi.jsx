@@ -133,8 +133,8 @@ class JiviGame extends React.Component {
        <div className="row">
         <div className="col-md-3">
          <div className="player">
+	  <h3><p style={{color:'orchid'}}>{player1}</p></h3>
 	 <ButtonFun1 root={this} player={this.state.player1} />
-	  <h3><p>{player1}</p></h3>
           { player1_jivis }
          </div>
         </div>
@@ -150,8 +150,8 @@ class JiviGame extends React.Component {
         </div>
         <div className="col-md-3">
          <div className="player">
+	  <h3><p style={{color:'orange'}}>{player2}</p></h3>
           <ButtonFun1 root={this} player={this.state.player2}/>
-	  <h3><p>{player2}</p></h3>
           { player2_jivis }
          </div>
         </div>
@@ -206,7 +206,7 @@ function ButtonFun1(params) {
   //if any of player's jivi is in field
   let in_field = _.where(state.field, {owner: player.name});
   if(state.challenged!=2 && jivi.length != 0 && in_field.length == 0){
-	return (<button type="button" className="btn btn-secondary" onClick={() => params.root.fight(player.name)}>Ready</button>)
+	return (<button type="button" className="btn btn-secondary btn-sm" onClick={() => params.root.fight(player.name)}>Ready</button>)
   }
   return <div> </div>
 }
@@ -277,7 +277,8 @@ function ShowFieldJivi(params) {
   let root = params.root;
   let state = root.state;
   let jivi = params.jivi;
-  let catf,catw,cate,catm= "";
+  let catf,catw,cate,catm;
+  catf=catw=cate=catm="hide";
   if(state.player1==null) {
     return (<div><p>Loading---</p></div>);
   }

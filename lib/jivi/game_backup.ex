@@ -16,5 +16,11 @@ defmodule Jivi.GameBackup do
       Map.get(state, name)
     end
   end
+
+  def list_games() do
+    Agent.get __MODULE__, fn list ->
+      list
+    end
+  end
 end
 

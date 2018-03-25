@@ -11,6 +11,11 @@ defmodule Jivi.Game do
     }
   end
 
+  def index_view(games) do
+    IO.puts "in index_view"
+    games
+  end
+
   def client_view(game) do
     %{
       player1: game.player1,

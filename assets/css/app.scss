@@ -3,6 +3,8 @@
 
 .index {
 	padding: 50px;
+	min-width: 100%;
+	min-height: 100%;
 }
 .containter {
 	text-align: center;
@@ -127,7 +129,10 @@ row {
 	color: #B22222;
 }
 .owner {
-	color: darkviolet;
+	color: #0000CD;
 	font-size: 130%;
 	font-weight: bold;
+}
+.hide {
+	display: none;
 }

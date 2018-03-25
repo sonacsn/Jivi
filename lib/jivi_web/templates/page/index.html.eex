@@ -1,13 +1,59 @@
-<h1 id="index-page">Join a Game</h1>
+<div id="index-page">
+<h1>Join a Game</h1>
 <div class="index">
 <div class="row">
   <div class="col">
-    <p><label for="gameName">Enter Game</label><br/>
-    <input type="text" id="gameName"/></p>
+     <div class="form-check">
+       <input class="form-check-input" type="radio" id="newgame" name="gamesel" onclick="enterGame()"/>
+       <label class="form-check-label"> Enter a new game </label>
+     </div>
+     <div class="form-check">    
+       <input class="form-check-input" type="radio" id="oldgame" name="gamesel" onclick="enterGame()"/>
+       <label class="form-check-label"> Enter an existing game </label>
+     </div>
+     <div id="entergame" style="display:none">
+      <p><label for="gameName">Enter Game</label><br/>
+        <input type="text" id="gameName"/></p>
+     </div>
+     <div id="enteroldgame" style="position:absolute;left:-999em;top:-999em">
+         <div class="form-group">
+         <p><select id="sel" class="form-control">
+         </select>
+         </p>
+         </div>
+     </div>
     <p><label for="playerName">Enter Player Name</label><br/>
     <input type="text" id="playerName"/></p>
     <a href="" class="btn btn-primary" onclick="this.href='/game/'+document.getElementById('gameName').value+'/player/'+document.getElementById('playerName').value">Join</a>  
   </div>
+  <div class="col">
+    
+  </div>
+ </div>
 </div>
-</div>
+<script>
+function enterGame(){
+  let radio1 = document.getElementById("newgame");
+  let radio2 = document.getElementById("oldgame");
 
+  let newgame = document.getElementById("entergame");
+  let oldgame = document.getElementById("enteroldgame");
+  
+  if(radio1.checked) 
+    newgame.style.display = "block";
+  else
+    newgame.style.display = "none";
+
+  if(radio2.checked && oldgame!=null){
+    oldgame.style.position = "relative"; 
+    oldgame.style.left = "0px";
+    oldgame.style.top = "10px";
+  }
+  else{
+   oldgame.style.position ="absolute";
+   oldgame.style.top= "-999em";
+   oldgame.style.left= "-999em";
+  }
+}
+</script>
+</div>

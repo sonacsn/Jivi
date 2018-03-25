@@ -33,12 +33,15 @@ import "phoenix_html";
 import socket from "./socket";
 
 import game_init from "./jivi";
+import run_demo from "./demo"
 
 function form_init() {
   let channel = socket.channel("games:demo", "player:demo", {});
-  channel.join()
-         .receive("ok", resp => { console.log("Joined successfully", resp) })
-         .receive("error", resp => { console.log("Unable to join", resp) });
+  let games;
+  let root = document.getElementById('index-page');
+  run_demo(root, channel);
+  
+
 }
 
 function start() {
