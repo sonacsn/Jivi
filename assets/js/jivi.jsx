@@ -75,7 +75,7 @@ class JiviGame extends React.Component {
     setTimeout(() => {
         this.category = "";
 	this.challenge(category)
-    }, 4000);
+    }, 8000);
   }
 
   render() {
@@ -104,7 +104,10 @@ class JiviGame extends React.Component {
     }
     if(this.state.killed != null) {
       killed_jivis = _.map(this.state.killed, (jivi,key) => {
-        return <div key={key} className="killed"><img src={"/images/" + jivi.name} alt="Image not available" width="60" height="60"/></div>;
+	let name="p2";
+	if(jivi.owner==this.state.player1.name)
+	    name="p1";
+        return <div key={key} className={name}><img src={"/images/" + jivi.name} alt="Image not available" width="60" height="60"/></div>;
           });
     }
     if(this.current_player == this.state.players[0]){
@@ -125,14 +128,14 @@ class JiviGame extends React.Component {
         msg = "Logged in as Observer";
 
     return (
-      <div className="container" max-width="100%">
+      <div className="container">
        <div className="message"><Message root={this}/></div>
        <div className="row">
         <div className="col-md-3">
          <div className="player">
+	 <ButtonFun1 root={this} player={this.state.player1} />
 	  <h3><p>{player1}</p></h3>
           { player1_jivis }
-	 <ButtonFun1 root={this} player={this.state.player1} />
          </div>
         </div>
         <div className="col-md-6">
@@ -141,15 +144,15 @@ class JiviGame extends React.Component {
 	    <Field root={this} />
           </div>
           <h3>Killed Jivis</h3>
-          <div className="flex-container">
+          <div className="flex-container killed">
             {killed_jivis}
 	  </div>
         </div>
         <div className="col-md-3">
          <div className="player">
+          <ButtonFun1 root={this} player={this.state.player2}/>
 	  <h3><p>{player2}</p></h3>
           { player2_jivis }
-          <ButtonFun1 root={this} player={this.state.player2}/>
          </div>
         </div>
        </div>
@@ -168,15 +171,18 @@ function Jivi(params) {
   }
 
   if(player.name!=root.current_player){
-    return (<div className="col-md"><img src={"/images/jiviball"} alt="Image not available" width="100%" height="200px"/></div>);
+    return (<div className="col-md jivi-back"><img src={"/images/jiviball"} alt="Image not available" width="70%" height="200px"/></div>);
   }
   let classname = "jivi-front";
-  if(jivi.selected)
-        classname = "jivi-selected";
-
+  if(jivi.selected){
+	if(jivi.owner==state.player1.name)
+            classname = "jivi-selected p1";
+	else
+	    classname = "jivi-selected p2";
+  }
   return (<div className="col-md">
              <div><img src={"/images/" + jivi.name} alt="Image not available" width="60" height="60"/></div>
-             <div className={classname} id="card" onClick={() => root.select(jivi, player)}>
+             <div className={classname}  onClick={() => root.select(jivi, player)}>
                 <p> Jivi    : {jivi.name} </p>
                 <p> Fire    : {jivi.fire} </p>
                 <p> Water   : {jivi.water} </p>
@@ -200,7 +206,7 @@ function ButtonFun1(params) {
   //if any of player's jivi is in field
   let in_field = _.where(state.field, {owner: player.name});
   if(state.challenged!=2 && jivi.length != 0 && in_field.length == 0){
-	return (<button type="button" className="btn btn-secondaryt" onClick={() => params.root.fight(player.name)}>Ready</button>)
+	return (<button type="button" className="btn btn-secondary" onClick={() => params.root.fight(player.name)}>Ready</button>)
   }
   return <div> </div>
 }
@@ -216,7 +222,7 @@ function Message(params) {
   else
     player = "observer";
   let in_field = _.where(state.field, {owner: player.name});
-
+  let turn_msg = "Your turn for challenge";
   if(player != "observer"){
     if(root.state.challenged==2){
       if(player.jivis.length!=0)
@@ -224,8 +230,12 @@ function Message(params) {
       else
         return(<h2>You lost. Better luck next time</h2>);	
     }
-    if(state.field.length==0 || (state.field.length==1 && in_field.length==0))
-      return (<div> Select and send your Jivi to fight</div>);
+    if(state.field.length==0 || (state.field.length==1 && in_field.length==0)){
+      if(player.turn)
+        return (<div>Select and send your Jivi to fight<br/>{turn_msg}</div>);
+      else
+        return (<div> Select and send your Jivi to fight</div>);
+    }
     if(state.field.length==1 && in_field.length==1)
       return (<div>Waiting for other player to send the Jivi </div>);
     if(state.field.length==2 && state.challenged==0)
@@ -267,17 +277,39 @@ function ShowFieldJivi(params) {
   let root = params.root;
   let state = root.state;
   let jivi = params.jivi;
+  let catf,catw,cate,catm= "";
   if(state.player1==null) {
     return (<div><p>Loading---</p></div>);
   }
+  switch(root.category){
+    case "fire":
+	catf="category";
+	break;
+    case "water":
+	catw="category";
+	break;
+    case "electricity":
+	cate="category";
+	break;
+    case "muscle":
+	catm="category";
+	break;
+  }
+  let clname="";
+  if(jivi.owner==state.player1.name)
+    clname = "jivi-selected p1";
+  else
+    clname = "jivi-selected p2";
+ 
   return (<div className="col-md">
              <div><img src={"/images/" + jivi.name} alt="Image not available" width="60" height="60"/></div> 
-             <div className="jivi-selected">
+             <div className={clname}>
+               <p className="owner"> OWNER     : {jivi.owner} </p>
                <p> Jivi     : {jivi.name} </p>
-               <p> Fire     : {jivi.fire} </p>
-               <p> Water    : {jivi.water} </p>
-               <p> Electric : {jivi.electricity} </p>
-               <p> Muscle   : {jivi.muscle} </p>
+               <p><span className={catf}> Fire     : {jivi.fire} </span> </p>
+               <p><span className={catw}> Water    : {jivi.water} </span> </p>
+               <p><span className={cate}> Electric : {jivi.electricity} </span> </p>
+               <p><span className={catm}> Muscle   : {jivi.muscle} </span> </p>
              </div>
           </div>);
 }

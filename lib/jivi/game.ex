@@ -51,6 +51,7 @@ defmodule Jivi.Game do
   end
 
   def showjivi(game, category) do
+    IO.inspect category
     Map.put(game, :challenged, 1) 
   end
 
