@@ -143,6 +143,7 @@ class JiviGame extends React.Component {
 	  <h3><p style={{color:'orchid'}}>{player1}</p></h3>
 	 <ButtonFun1 root={this} player={this.state.player1} />
           { player1_jivis }
+         <ButtonFun2 root={this} player={this.state.player1} />
          </div>
         </div>
         <div className="col-md-6">
@@ -160,10 +161,10 @@ class JiviGame extends React.Component {
 	  <h3><p style={{color:'orange'}}>{player2}</p></h3>
           <ButtonFun1 root={this} player={this.state.player2}/>
           { player2_jivis }
+          <ButtonFun2 root={this} player={this.state.player2}/>
          </div>
         </div>
        </div>
-       <button type="button" className="btn btn-secondary" onClick={() => this.reset(this.current_player)}>Reset</button>
       </div>
     );
   }
@@ -217,6 +218,18 @@ function ButtonFun1(params) {
 	return (<button type="button" className="btn btn-secondary btn-sm" onClick={() => params.root.fight(player.name)}>Ready</button>)
   }
   return <div> </div>
+}
+
+function ButtonFun2(params) {
+   let root = params.root;
+   let state = params.root.state;
+   let player = params.player;
+
+   if(player == null || player.name != params.root.current_player){
+	return (<div></div>)
+   } else {
+        return (<button type="button" className="btn btn-secondary btn-sm" onClick={() => params.root.reset(player.name)}>Reset</button>)
+   }
 }
 
 function Message(params) {
