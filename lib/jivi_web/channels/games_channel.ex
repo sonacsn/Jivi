@@ -62,6 +62,12 @@ defmodule JiviWeb.GamesChannel do
     {:noreply, socket}
   end
 
+  def handle_in("chat", %{"player" => ll, "msg" => ll2}, socket) do
+    game = Game.chat(socket.assigns[:game], ll, ll2)
+     broadcast socket, "chat", game
+     {:noreply, socket}
+  end
+
   def handle_in("challenge", %{"category" => ll}, socket) do
     game = Game.challenge(socket.assigns[:game], ll)
     #Jivi.GameBackup.save(socket.assigns[:name], game)
@@ -78,7 +84,7 @@ defmodule JiviWeb.GamesChannel do
     {:noreply, socket}
   end
 
-  intercept ["fight", "select","challenge", "player", "showjivi"]
+  intercept ["fight", "select","challenge", "player", "showjivi", "chat"]
   def handle_out("fight", payload, socket) do
     game = payload["game"]
     socket = assign(socket, :game, game)
@@ -111,6 +117,13 @@ defmodule JiviWeb.GamesChannel do
     socket = assign(socket, :game, game)
     Jivi.GameBackup.save(socket.assigns[:name], game)
     broadcast socket, "push_select", %{"game" => game}
+    {:noreply, socket}
+  end
+
+  def handle_out("chat", game, socket) do
+    socket = assign(socket, :game, game)
+    Jivi.GameBackup.save(socket.assigns[:name], game)
+    broadcast socket, "render_chat", %{"game" => game}
     {:noreply, socket}
   end
   # Add authorization logic here as required.

@@ -32,6 +32,8 @@ class JiviGame extends React.Component {
 
     this.channel.on("render_challenge", resp => {this.category="";
 						 this.gotView(resp)});  
+
+    this.channel.on("render_chat", resp => this.gotView(resp)); 
 	 
     this.channel.on("render_fight", resp => this.gotView(resp));  
 
@@ -47,6 +49,13 @@ class JiviGame extends React.Component {
   putPlayerName(name) {
          this.channel.push("player", { name: name })
          .receive("ok", this.gotView.bind(this));
+  }
+
+  chat(player, msg) {
+    if(msg != null) {
+       this.channel.push("chat", { player: player, msg:msg })
+        .receive("ok", this.gotView.bind(this));
+    }
   }
 
   fight(trigger) {
@@ -136,6 +145,8 @@ class JiviGame extends React.Component {
 	  <h3><p style={{color:'orchid'}}>{player1}</p></h3>
 	 <ButtonFun1 root={this} player={this.state.player1} />
           { player1_jivis }
+         <ChatFun root={this} player={this.state.player1} />
+         <MsgFun root={this} player={this.state.player1} />
          </div>
         </div>
         <div className="col-md-6">
@@ -153,6 +164,8 @@ class JiviGame extends React.Component {
 	  <h3><p style={{color:'orange'}}>{player2}</p></h3>
           <ButtonFun1 root={this} player={this.state.player2}/>
           { player2_jivis }
+         <ChatFun root={this} player={this.state.player2} />
+         <MsgFun root={this} player={this.state.player2} />
          </div>
         </div>
        </div>
@@ -210,6 +223,36 @@ function ButtonFun1(params) {
   }
   return <div> </div>
 }
+
+function ChatFun(params) {
+  let root = params.root;
+  let state = params.root.state;
+  let player = params.player;
+  let msg = "Hi";
+  //let data = document.getElementById("user-msg").value;
+
+  if(player.name == root.current_player) {
+     return(<form id="chat-form">
+             <textarea placeholder="Type your comment" id="user-msg"></textarea>
+             <button type="button" className="btn btn-secondary btn-sm" onClick={() => params.root.chat(player.name, player.name)}>Chat</button>
+           </form>)
+  }
+  return(<div></div>)
+}
+
+function MsgFun(params) {
+  let root = params.root;
+  let state = params.root.state;
+  let player = params.player;
+
+  if(player.name != root.current_player) {
+     return(<form id="chat-form">
+             <textarea placeholder="Type your comment" id="owner-msg" value={ player.msg } readOnly></textarea>
+           </form>)
+  }
+  return(<div></div>)
+}
+
 
 function Message(params) {
   let root = params.root;
