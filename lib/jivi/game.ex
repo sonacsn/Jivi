@@ -202,5 +202,11 @@ defmodule Jivi.Game do
       |> Map.put(:player2, %{game.player2 | jivis: game.player2.jivis -- [player2_jivi]})
     end
   end
+
+  def reset(game, player_name) do
+    game = new()
+    game = put_player(game, player_name)
+    game
+  end
 end
 

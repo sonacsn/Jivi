@@ -33,6 +33,8 @@ class JiviGame extends React.Component {
     this.channel.on("render_challenge", resp => {this.category="";
 						 this.gotView(resp)});  
 	 
+    this.channel.on("render_reset", resp => this.gotView(resp));  
+
     this.channel.on("render_fight", resp => this.gotView(resp));  
 
     this.channel.on("put_player_name", resp => this.gotView(resp));
@@ -47,6 +49,11 @@ class JiviGame extends React.Component {
   putPlayerName(name) {
          this.channel.push("player", { name: name })
          .receive("ok", this.gotView.bind(this));
+  }
+
+  reset(trigger) {
+       this.channel.push("reset", { trigger: trigger })
+        .receive("ok", this.gotView.bind(this));
   }
 
   fight(trigger) {
@@ -156,6 +163,7 @@ class JiviGame extends React.Component {
          </div>
         </div>
        </div>
+       <button type="button" className="btn btn-secondary" onClick={() => this.reset(this.current_player)}>Reset</button>
       </div>
     );
   }
