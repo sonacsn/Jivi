@@ -315,12 +315,35 @@ function ShowFieldJivi(params) {
           </div>);
 }
 
+function ShowFieldOwnerJivi(params) {
+  let root = params.root;
+  let state = root.state;
+  let jivi = params.jivi;
+  if(state.player1==null) {
+    return (<div><p>Loading---</p></div>);
+  }
+  return (<div className="col-md">
+             <div><img src={"/images/" + jivi.name} alt="Image not available" width="60" height="60"/></div> 
+             <div className="jivi-selected">
+               <p> Jivi     : {jivi.name} </p>
+               <p> Fire     : {jivi.fire} </p>
+               <p> Water    : {jivi.water} </p>
+               <p> Electric : {jivi.electricity} </p>
+               <p> Muscle   : {jivi.muscle} </p>
+             </div>
+          </div>);
+}
+
 function Field(params){
   let state = params.root.state;
   let field_jivis = "";
   if(state.field != null) {
       field_jivis = _.map(state.field, (jivi,ii) => {
-           if(state.challenged == 0) {
+           if (state.challenged == 1) {
+              return <ShowFieldJivi key={ii} root={params.root} jivi={jivi}/>
+           } else if(params.root.current_player == jivi.owner) {
+              return <ShowFieldOwnerJivi root={params.root} jivi={jivi}/>
+           } else if(state.challenged == 0) {
               return <FieldJivi key={ii} root={params.root} jivi={jivi}/>
            } else {
               return <ShowFieldJivi key={ii} root={params.root} jivi={jivi}/>
