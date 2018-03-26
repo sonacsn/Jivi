@@ -155,8 +155,8 @@ defmodule Jivi.Game do
 
   def new_players do
     {p1_jivis, p2_jivis} = initial_jivis()
-    player1 = %{turn: true, reset: false, jivis: p1_jivis}
-    player2 = %{turn: false, reset: false, jivis: p2_jivis}
+    player1 = %{turn: true, jivis: p1_jivis}
+    player2 = %{turn: false, jivis: p2_jivis}
     { player1, player2 }
   end
 
@@ -200,23 +200,6 @@ defmodule Jivi.Game do
       player2_jivi = return_selected_jivi(game.player2.jivis)
       Map.put(game, :field, game.field ++ [player2_jivi])
       |> Map.put(:player2, %{game.player2 | jivis: game.player2.jivis -- [player2_jivi]})
-    end
-  end
-
-  def reset(game, player_name) do
-    if(player_name == game.player1.name) do
-       player1 = Map.put(game.player1, :reset, true)
-       game = Map.put(game, :player1, player1)
-    else 
-       player2 = Map.put(game.player2, :reset, true)
-       game = Map.put(game, :player2, player2)
-    end
-    if(game.player1.reset == true && game.player2.reset == true) do
-       game = new()
-       game = put_player(game, player_name)
-       game
-    else
-       game
     end
   end
 
