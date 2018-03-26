@@ -17,7 +17,7 @@
      </div>
      <div id="enteroldgame" style="position:absolute;left:-999em;top:-999em">
          <div class="form-group">
-         <p><select id="sel" class="form-control">
+         <p><select id="sel" class="form-control" onclick="setId()">
          </select>
          </p>
          </div>
@@ -44,7 +44,7 @@ function enterGame(){
   else
     newgame.style.display = "none";
 
-  if(radio2.checked && oldgame!=null){
+  if(radio2.checked){
     oldgame.style.position = "relative"; 
     oldgame.style.left = "0px";
     oldgame.style.top = "10px";
@@ -54,6 +54,10 @@ function enterGame(){
    oldgame.style.top= "-999em";
    oldgame.style.left= "-999em";
   }
+}
+function setId(){
+  let gamename = document.getElementById("sel");
+  document.getElementById('gameName').value = gamename.value;
 }
 </script>
 </div>
