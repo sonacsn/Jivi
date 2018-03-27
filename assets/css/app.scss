@@ -20,12 +20,11 @@ h3 {
 	font-family: sans-serif;
 }
 
-.intro  {
-	background-color: lightgreen;
+.text {
+	font-size: xx-large;
 }
-
-row {
-	text-align: center;
+.row {
+	text-align: left;
 }
 
 .col-md {
@@ -43,6 +42,7 @@ row {
 }
 
 .field {
+	min-height: 600px;
         background-color: lightgreen;
 	width: 100%;
         height: 100%;
@@ -63,6 +63,7 @@ row {
         text-align: center;
         font-size: 90%;
 	display: flex;
+	min-height: 0px;
 }
 
 .p1 {
@@ -72,6 +73,19 @@ row {
 .p2 {
 	border: 5px solid orange;
 	background-color: orange;
+}
+
+.chatp1 {
+	color: orchid;
+	text-align: left;
+        font-family: serif;
+	font-weight: bold;
+}
+.chatp2 {
+	color: orange;
+	text-align: right;
+	font-family: serif;
+	font-weight: bold;
 }
 
 .player {
@@ -136,6 +150,16 @@ row {
 	color: #0000CD;
 	font-size: 130%;
 	font-weight: bold;
+}
+#owner-msg {
+	width: 80%;
+        margin: auto;
+	padding: 5px;
+	font-size: 90%;
+	display: inline-block;
+	border: 1px solid black;
+	height: 100px;
+	overflow: scroll;
 }
 .hide {
 	display: none;
