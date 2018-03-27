@@ -7,7 +7,8 @@ defmodule Jivi.Game do
       player2: p2,
       field: [],
       killed: [],
-      challenged: 0
+      challenged: 0,
+      chat: ["Game Begins"]
     }
   end
 
@@ -155,8 +156,8 @@ defmodule Jivi.Game do
 
   def new_players do
     {p1_jivis, p2_jivis} = initial_jivis()
-    player1 = %{turn: true, msg: "I am player1", jivis: p1_jivis}
-    player2 = %{turn: false, msg: "I am player2", jivis: p2_jivis}
+    player1 = %{turn: true, jivis: p1_jivis}
+    player2 = %{turn: false, jivis: p2_jivis}
     { player1, player2 }
   end
 
@@ -203,7 +204,7 @@ defmodule Jivi.Game do
     end
   end
 
-  def chat(game, player_name, msg) do
+  def chat_old(game, player_name, msg) do
     if(player_name == game.player1.name) do
        player1 = Map.put(game.player1, :msg, msg)
        Map.put(game, :player1, player1)
@@ -211,6 +212,12 @@ defmodule Jivi.Game do
        player2 = Map.put(game.player2, :msg, msg)
        Map.put(game, :player2, player2)
     end
+  end
+
+  def chat(game, player_name, msg) do
+    chat = game.chat ++ [Enum.join([player_name, " said:", msg], "")]
+    game = Map.put(game, :chat, chat)
+    game
   end
 
 end

@@ -247,7 +247,7 @@ function MsgFun(params) {
 
   if(player.name != root.current_player) {
      return(<form id="chat-form">
-             <textarea placeholder="Type your comment" id="owner-msg" value={ player.msg } readOnly></textarea>
+             <textarea placeholder="Type your comment" id="owner-msg" value={ state.chat } readOnly></textarea>
            </form>)
   }
   return(<div></div>)
