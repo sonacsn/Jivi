@@ -27,7 +27,37 @@
     <a href="" class="btn btn-primary" onclick="this.href='/game/'+document.getElementById('gameName').value+'/player/'+document.getElementById('playerName').value">Join</a>  
   </div>
   <div class="col">
-    
+       <center><b><h1> How to Join </h1></b></center>
+       <ul>
+         <div class="intro">
+          <li>Want to Join a New Game?</li>
+           <ul>
+	    <li> Select the "Enter a new game" option </li>
+            <li> Enter the game name in "Enter Game"  </li>
+            <li> Enter the player name in "Enter Player Name" and click "Join"</li>
+           </ul>
+          <li>Want to Join an existing Game?</li>
+           <ul>
+            <li> Select the "Enter an existing game" option </li>
+            <li> Select a game from the drop down option </li>
+            <li> Enter the player name in "Enter Player Name and click "Join"</li>
+           </ul>
+         </div>
+       </ul>
+       <center><b><h1> How to play </h1></b></center> 
+       <ul>
+        <div class="intro">
+          <li> Click on a Jivi and Click on the "Ready" button to sent Jivi to fight</li>
+          <li> When its your turn to challenge, pick a challenge based on your Jivi's power</li>
+          <li> Jivis will fight based on the power either you or your opponent have selected</li>
+          <li> Your Jivi will be killed fif it loses the battle </li>
+          <li> Your Jivi will return to you if it wins the battle </li>
+          <li> Repeat this till one player has no Jivi to play </li>
+          <li> Watch for Messages at the top to know the game state </li>
+          <li> Chat with your opponent for more fun </li>
+          <li> All the best!! Enjoy the game </li>
+        </div>
+       </ul> 
   </div>
  </div>
 </div>
