@@ -3,6 +3,8 @@
 <div class="index">
 <div class="row">
   <div class="col">
+    <p><label for="playerName">Enter Player Name</label><br/>
+    <input type="text" id="playerName"/></p>
      <div class="form-check">
        <input class="form-check-input" type="radio" id="newgame" name="gamesel" onclick="enterGame()"/>
        <label class="form-check-label"> Enter a new game </label>
@@ -14,17 +16,16 @@
      <div id="entergame" style="display:none">
       <p><label for="gameName">Enter Game</label><br/>
         <input type="text" id="gameName"/></p>
+        <a class="btn btn-primary" onclick="joinGame()">Join</a>  
      </div>
      <div id="enteroldgame" style="position:absolute;left:-999em;top:-999em">
          <div class="form-group">
-         <p><select id="sel" class="form-control" onclick="setId()">
+         <p><select id="sel" class="form-control">
          </select>
          </p>
          </div>
+         <a class="btn btn-primary" onclick="setId()">Join</a>  
      </div>
-    <p><label for="playerName">Enter Player Name</label><br/>
-    <input type="text" id="playerName"/></p>
-    <a href="" class="btn btn-primary" onclick="this.href='/game/'+document.getElementById('gameName').value+'/player/'+document.getElementById('playerName').value">Join</a>  
   </div>
   <div class="col">
        <h1 class="text"> How to Join </h1>
@@ -87,7 +88,13 @@ function enterGame(){
 }
 function setId(){
   let gamename = document.getElementById("sel");
-  document.getElementById('gameName').value = gamename.value;
+  let name  = gamename[gamename.selectedIndex].value;
+  location.href = '/game/'+name+'/player/'+document.getElementById('playerName').value;
+}
+function joinGame(){
+  let gamename = document.getElementById("gameName").value;
+  location.href = '/game/'+gamename+'/player/'+document.getElementById('playerName').value;
+
 }
 </script>
 </div>
