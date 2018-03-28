@@ -3,21 +3,17 @@ defmodule JiviWeb.GamesChannel do
   alias Jivi.Game
 
   def join("games:" <> name, payload, socket) when name=="demo" do
-    IO.puts "In demo join channel"
     games=if authorized?(payload) do
       list = Jivi.GameBackup.list_games()
       Map.keys(list)
     end
     socket = socket
     |> assign(:games, games)
-    IO.inspect games
     {:ok, %{"join" => name, "games" => Game.index_view(games)}, socket}
   end
 
 
   def join("games:" <> name, payload, socket) do
-    IO.puts "In games channel"
-    IO.inspect name
     "player:" <> player = payload
     if authorized?(payload) do
       game = Jivi.GameBackup.load(name) || Game.new()
